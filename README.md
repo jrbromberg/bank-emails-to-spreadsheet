@@ -35,7 +35,7 @@ Setup bank alerts to consider anything over zero dollars as a large transaction.
 Setup rule to REDIRECT large transaction bank alert emails from your personal email to your new host Gmail account.
 
 ### 4. Spreadsheet
-In your new host Gmail account, create a new spreadsheet by importing the "bank-email-scraper starter spreadsheet.ods" file found in this repo.  You may name the spreadsheet whatever you like.  Do not change the name of the "Transactions" tab/sheet.
+In your new host Gmail account, create a new spreadsheet by importing the `bank_email_scraper_starter_spreadsheet.ods` file found in this repo.  You may name the spreadsheet whatever you like.  Do not change the name of the "Transactions" tab/sheet.
 
 You can share the spreadsheet with a personal Gmail account as view only.  This makes it easy to view without any worry of accidentally making edits.
 
