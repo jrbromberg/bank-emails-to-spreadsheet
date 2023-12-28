@@ -58,5 +58,13 @@ Create a new project. Name it whatever you like.
 
 Paste the code from `Code.gs` in this repo into the `Code.gs` file in your Google Apps Script project.  Update the code in the first two lines.  Enter your spreadsheet ID which can be found in the spreadsheet URL.  Enter your personal email for error emails.
 
+### 6. Testing and deployment
+
 Save and deploy.  You will need to allow access and should be prompted to do so.
+
+Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`.  Run the `checkForNewAlerts` function.  Check the log, spreadsheet, and updated email labels to ensure the script is working.  Test more scenarios  you deem necessary.
+
+Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
+
+Enjoy and let me know if I missed anything.
 
