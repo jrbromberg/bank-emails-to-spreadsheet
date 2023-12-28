@@ -14,7 +14,7 @@ This is made to work with BECU but could be modified to work with any bank that 
 
 # Setup
 
-_NOTE: My preference was to setup a new Gmail account to host the spreadsheet and script. This felt safer to me but I don't see an issue with using only a personal Gmail account.  Modify setup as needed to use one Gmail account that receives bank alerts directly from the bank and hosts the spreadsheet and script._
+_NOTE: My preference was to setup a new Gmail account to host the spreadsheet and script. This felt safer but I don't see an issue with using only a personal Gmail account.  Modify setup as needed to use one Gmail account that receives bank alerts directly from the bank and hosts the spreadsheet and script._
 
 ### 1. Host gmail account
 Create a new Gmail account.  Use whatever name you like.  I recommend using your personal email as the backup email.
