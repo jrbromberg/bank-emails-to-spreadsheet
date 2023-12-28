@@ -62,7 +62,7 @@ Paste the code from `Code.gs` in this repo into the `Code.gs` file in your Googl
 
 Save and deploy.  You will need to allow access and should be prompted to do so.
 
-Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`.  Run the `checkForNewAlerts` function.  Check the log, spreadsheet, and updated email labels to ensure the script is working.  Test more scenarios  you deem necessary.
+Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`.  Run the `checkForNewAlerts` function.  Check the log, spreadsheet, and updated email labels to ensure the script is working.  Test more scenarios as you deem necessary.
 
 Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
 
