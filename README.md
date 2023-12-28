@@ -44,7 +44,7 @@ Go to Google Apps Script at https://script.google.com/home.  Make sure you are i
 
 Create a new project. Name it whatever you like.
 
-Paste the code from `Code.gs` in this repo into the Code.gs file.  Update the code in the first two lines.  Enter your spreadsheet ID which can be found in the spreadsheet URL.  Enter your personal email for error emails.
+Paste the code from `Code.gs` in this repo into the Code.gs file in your Google Apps Script project.  Update the code in the first two lines.  Enter your spreadsheet ID which can be found in the spreadsheet URL.  Enter your personal email for error emails.
 
 Save and deploy.  You will need to allow access and should be prompted to do so.
 
