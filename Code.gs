@@ -69,7 +69,6 @@ function fetchTransactionsFromBankEmails() {
           var transDescription = thisTransaction.match(descriptionRegex)[0].slice(1).slice(0, -1);
           var valuesfromTransaction = [receivedTime, accountNum, transType, dollarAmount, transDescription];
           valuesFromAllTransactions.push(valuesfromTransaction);
-          //if (transType.match('Pending') === false) {
           if (/Pending/.test(transType) === false) {
             var valuesMinusReceivedTime = valuesfromTransaction.slice(1);
             newCompletedTransactions.push(valuesMinusReceivedTime);
