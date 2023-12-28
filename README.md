@@ -15,7 +15,7 @@ This is made to work with BECU but could be modified to work with any bank that 
 # Features
 
 Script
-- Pulls email received datetime, account, transaction type, amount, and transaction description into Transactions tab for each transaction
+- Pulls email received datetime, account, transaction type, amount, and description into Transactions tab for each transaction
 - Checks new transactions against pending transactions to keep balances correct
 - Updates email labels after processing
 - Incluldes some basic error handling with email alerts
