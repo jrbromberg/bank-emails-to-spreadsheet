@@ -20,7 +20,7 @@ Script
 - Updates email labels after processing
 - Includes some basic error handling with email alerts
 
-Spreadsheet
+Starter spreadsheet
 - Sums transaction information by account in the Balances tab.
 
 
