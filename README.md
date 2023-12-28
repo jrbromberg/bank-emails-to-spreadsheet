@@ -6,11 +6,23 @@ No bank login information required.  This works by scraping emails.
 
 This is made to work with BECU but could be modified to work with any bank that can send email alerts for all transactions.
 
+# Included
+
+- Code for Google Apps Script
+- A simple starter spreadsheet to upload to Google Sheets
+- Basic setup instructions for whole process
+
 # Features
 
-* Code for Google Apps Script
-* A simple starter spreadsheet to upload to Google Sheets
-* Setup instructions
+Script
+- Pulls email received datetime, account, transaction type, amount, and transaction description into Transactions tab for each transaction
+- Checks new transactions against pending transactions to keep balances correct
+- Updates email labels after processing
+- Incluldes some basic error handling with email alerts
+
+Spreadsheet
+- Sums transaction information by account in the Balances tab.
+
 
 # Setup
 
