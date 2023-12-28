@@ -18,7 +18,7 @@ Script
 - Pulls email received datetime, account, transaction type, amount, and description into Transactions tab for each transaction
 - Checks new transactions against pending transactions to keep balances correct
 - Updates email labels after processing
-- Incluldes some basic error handling with email alerts
+- Includes some basic error handling with email alerts
 
 Spreadsheet
 - Sums transaction information by account in the Balances tab.
@@ -28,7 +28,7 @@ Spreadsheet
 
 _NOTE: My preference was to setup a new Gmail account to host the spreadsheet and script. This felt safer but I don't see an issue with using only a personal Gmail account.  Modify setup as needed to use one Gmail account that receives bank alerts directly from the bank and hosts the spreadsheet and script._
 
-### 1. Host gmail account
+### 1. Host Gmail account
 Create a new Gmail account.  Use whatever name you like.  I recommend using your personal email as the backup email.
 
 Create two new labels:
