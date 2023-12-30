@@ -1,6 +1,6 @@
 // add your info here
 const SPREADSHEET_ID = 'PUT YOUR GOOGLE SPREADSHEET ID HERE';
-const ERROR_ALERT_EMAIL_ADDRESS = 'PUT YOUR EMAIL HERE';
+const ERROR_ALERT_EMAIL_ADDRESS = 'CHOOSE EMAIL ADDRESS FOR ERROR ALERTS';
 
 // if using with BECU, as of writing, no changes are needed below this line
 // setup your email, spreadsheet, and bank account alerts per the readme
@@ -30,7 +30,6 @@ function checkForNewAlerts() {
     Logger.log('No new alerts');
   }
 }
-
 
 function processBankAlerts() {
   try {
