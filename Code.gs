@@ -10,17 +10,21 @@ const sheetName = 'Transactions';
 const transactionsSheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);
 const accountNumRegex = /\d{4} \*/;
 const transactionTypeRegex = /(Large Pending Expense|Large Pending Deposit|Large Expense|Large Deposit)/;
-const pendingSearchRegex = /Pending/;
+const expenseRegex = /Expense/;
+const pendingRegex = /Pending/;
 const amountRegex = /(?!\$0\.00)\$[\d,]*\.\d\d/;
 const descriptionRegex = /\(.*\)/;
 const remainingContentRegex = /12770 Gateway Drive/;
-var unprocessedAlerts = preProcessLabel.getThreads();
-var newCompletedTransactions = [];
-var errorOccurred = false;
-var errorEmailMessages = [];
+const unprocessedAlerts = preProcessLabel.getThreads();
+let valuesFromAllNewTransactions = [];
+let newCompletedTransactions = [];
+let currentPendingTransactions = [];
+let errorEmailMessages = [];
+let errorOccurred = false;
+let anyPendingTransactionResolved = false;
 
 function checkForNewAlerts() {
-  var newAlertsCount = unprocessedAlerts.length;
+  const newAlertsCount = unprocessedAlerts.length;
   if (newAlertsCount > 0) {
     Logger.log(newAlertsCount + ' new alert messages found');
     processBankAlerts();
@@ -47,49 +51,53 @@ function processBankAlerts() {
 }
 
 function fetchTransactionsFromBankEmails() {
-  var valuesFromAllTransactions = [];
-  var allMessages = GmailApp.getMessagesForThreads(unprocessedAlerts);
-  allMessages.forEach(getValuesFromMessage);
-  function getValuesFromMessage(thisMessage) {
-    var content = thisMessage[0].getPlainBody();
+  const allMessages = GmailApp.getMessagesForThreads(unprocessedAlerts);
+  for (let i = 0; i < allMessages.length; i++) {
+    let thisMessage = allMessages[i];
+    let receivedTime = thisMessage[0].getDate();
+    let messageContent = thisMessage[0].getPlainBody();
+    let transactionsFromMessage = messageContent.split(new RegExp(`(?<=${amountRegex.source})`, "g"));
     Logger.log('Message:');
-    Logger.log(content);
-    var receivedTime = thisMessage[0].getDate();
-    var transactionsFromMessage = content.split(new RegExp(`(?<=${amountRegex.source})`, "g"));
+    Logger.log(messageContent);
     transactionsFromMessage.forEach(getValuesFromTransaction);
-    function getValuesFromTransaction(thisTransaction) {
-      try {
-        if (accountNumRegex.test(thisTransaction)) {
-          var accountNum = thisTransaction.match(accountNumRegex)[0].slice(0, 4);
-          var transType = thisTransaction.match(transactionTypeRegex)[0].replace('Large ', '');
-          var dollarAmount = thisTransaction.match(amountRegex)[0].replace('$', '');
-          if (/Expense/.test(transType)) {
-            dollarAmount = ('-' + dollarAmount);
-          }
-          var transDescription = thisTransaction.match(descriptionRegex)[0].slice(1).slice(0, -1);
-          var valuesfromTransaction = [receivedTime, accountNum, transType, dollarAmount, transDescription];
-          valuesFromAllTransactions.push(valuesfromTransaction);
-          if (/Pending/.test(transType) === false) {
-            var valuesMinusReceivedTime = valuesfromTransaction.slice(1);
-            newCompletedTransactions.push(valuesMinusReceivedTime);
-          }
-        } else if (!remainingContentRegex.test(thisTransaction)) {
-          errorOccurred = true;
-          console.error('Error: Unexpected non-matching content');
-          errorEmailMessages.push('Unexpected non-transaction content was found.');
-        }
-      } catch (error) {
-        errorOccurred = true;
-        console.error('Error:', error.message);
-        console.error(error.stack);
-        errorEmailMessages.push('An error occured while using regex to scrape transaction values.');
-      }
+    for (let i = 0; i < transactionsFromMessage.length; i++) {
+      let thisTransaction = transactionsFromMessage[i];
+      getValuesFromTransaction(thisTransaction, receivedTime);
     }
   }
-  Logger.log(valuesFromAllTransactions.length + ' transactions found');
+  Logger.log(valuesFromAllNewTransactions.length + ' transactions found');
   Logger.log('Transactions:');
-  Logger.log(valuesFromAllTransactions);
-  return valuesFromAllTransactions.reverse();
+  Logger.log(valuesFromAllNewTransactions);
+  return valuesFromAllNewTransactions.reverse();
+}
+
+function getValuesFromTransaction(thisTransaction, receivedTime) {
+  try {
+    if (accountNumRegex.test(thisTransaction)) {
+      let accountNum = thisTransaction.match(accountNumRegex)[0].slice(0, 4);
+      let transType = thisTransaction.match(transactionTypeRegex)[0].replace('Large ', '');
+      let dollarAmount = thisTransaction.match(amountRegex)[0].replace('$', '');
+      if (expenseRegex.test(transType)) {
+        dollarAmount = ('-' + dollarAmount);
+      }
+      let transDescription = thisTransaction.match(descriptionRegex)[0].slice(1).slice(0, -1);
+      let valuesfromTransaction = [receivedTime, accountNum, transType, dollarAmount, transDescription];
+      valuesFromAllNewTransactions.push(valuesfromTransaction);
+      if (pendingRegex.test(transType) === false) {
+        let valuesMinusReceivedTime = valuesfromTransaction.slice(1);
+        newCompletedTransactions.push(valuesMinusReceivedTime);
+      }
+    } else if (!remainingContentRegex.test(thisTransaction)) {
+      errorOccurred = true;
+      console.error('Error: Unexpected non-matching content');
+      errorEmailMessages.push('Unexpected non-transaction content was found.');
+    }
+  } catch (error) {
+    errorOccurred = true;
+    console.error('Error:', error.message);
+    console.error(error.stack);
+    errorEmailMessages.push('An error occured while using regex to scrape transaction values.');
+  }
 }
 
 function writeToTransactionsSheet(transactionValuesToWrite) {
@@ -98,44 +106,50 @@ function writeToTransactionsSheet(transactionValuesToWrite) {
 }
 
 function reviewPendingTransactionsFromSheet() {
-  var pendingTransactionResolved = false;
   if (newCompletedTransactions.length > 0) {
-    var currentPendingTransactions = [];
-    var allRowsFromTransactionSheet = transactionsSheet.getDataRange().getValues();
-    allRowsFromTransactionSheet.forEach(checkIfPendingTransaction);
-    function checkIfPendingTransaction(thisTransactionFromSheet, index) {
-      if (pendingSearchRegex.test(thisTransactionFromSheet)) {
-        var rowNumber = (index + 1);
-        var accountNum = thisTransactionFromSheet[1].toString();
-        var transType = thisTransactionFromSheet[2];
-        var dollarAmount = thisTransactionFromSheet[3].toString();
-        var transDescription = thisTransactionFromSheet[4];
-        currentPendingTransactions.push([rowNumber, [accountNum, transType, dollarAmount, transDescription]]);
-      }
-    }
+    const allRowsFromTransactionSheet = transactionsSheet.getDataRange().getValues();
+    getCurrentPendingTransactionsFromSheet(allRowsFromTransactionSheet);
     if (currentPendingTransactions.length > 0) {
-      newCompletedTransactions.forEach(thisNewCompletedTransaction => {
-        for (let i = 0; i < currentPendingTransactions.length; i++) {
-          var thisPendingTransaction = currentPendingTransactions[i];
-          var pendingTransactionForComp = [...thisPendingTransaction[1]];
-          pendingTransactionForComp[1] = pendingTransactionForComp[1].replace('Pending ', '');
-          if (JSON.stringify(pendingTransactionForComp) === JSON.stringify(thisNewCompletedTransaction)) {
-            Logger.log('Found completed pending transaction:');
-            Logger.log(thisPendingTransaction[1]);
-            Logger.log(thisNewCompletedTransaction);
-            transactionsSheet.deleteRow(thisPendingTransaction[0]);
-            currentPendingTransactions.splice(i, 1);
-            pendingTransactionResolved = true;
-            Logger.log('Entry for pending transaction deleted from sheet');
-            break;
-          }
-        }
-      });
+      compareNewCompletedTransactionsWithCurrentPendingTransactions();
     }
   }
-  if (pendingTransactionResolved === false) {
+  if (anyPendingTransactionResolved === false) {
     Logger.log('No pending transactions were completed')
   }
+}
+
+function getCurrentPendingTransactionsFromSheet(allRowsFromTransactionSheet) {
+  allRowsFromTransactionSheet.forEach((thisTransactionFromSheet, index) => {
+    if (pendingRegex.test(thisTransactionFromSheet)) {
+      let rowNumber = (index + 1);
+      let accountNum = thisTransactionFromSheet[1].toString();
+      let transType = thisTransactionFromSheet[2];
+      let dollarAmount = thisTransactionFromSheet[3].toString();
+      let transDescription = thisTransactionFromSheet[4];
+      currentPendingTransactions.push([rowNumber, [accountNum, transType, dollarAmount, transDescription]]);
+    }
+  });
+}
+
+function compareNewCompletedTransactionsWithCurrentPendingTransactions() {
+  newCompletedTransactions.forEach(thisNewCompletedTransaction => {
+    for (let i = 0; i < currentPendingTransactions.length; i++) {
+      let thisPendingTransaction = currentPendingTransactions[i];
+      let pendingTransactionForComp = [...thisPendingTransaction[1]];
+      pendingTransactionForComp[1] = pendingTransactionForComp[1].replace('Pending ', '');
+      if (JSON.stringify(pendingTransactionForComp) === JSON.stringify(thisNewCompletedTransaction)) {
+        Logger.log('Found completed pending transaction:');
+        Logger.log(thisPendingTransaction[1]);
+        Logger.log(thisNewCompletedTransaction);
+        transactionsSheet.deleteRow(thisPendingTransaction[0]);
+        currentPendingTransactions.splice(i, 1);
+        i--;
+        anyPendingTransactionResolved = true;
+        Logger.log('Entry for pending transaction deleted from sheet');
+        break;
+      }
+    }
+  });
 }
 
 function updateLabels() {
@@ -148,11 +162,11 @@ function updateLabels() {
 
 function labelReset() {
   // for use during testing and development
-  var processedThreads = postProcessLabel.getThreads();
+  let processedThreads = postProcessLabel.getThreads();
   processedThreads.forEach(removeAllLabels);
   unprocessedAlerts.forEach(removeAllLabels);
   function removeAllLabels(thread) {
-    var labels = thread.getLabels();
+    let labels = thread.getLabels();
     labels.forEach(removeThisLabel);
     function removeThisLabel(thisLabel) {
       thread.removeLabel(thisLabel);
