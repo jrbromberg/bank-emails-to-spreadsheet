@@ -1,18 +1,12 @@
-// adjust TEST_MESSAGES_SOURCE as needed for testing
-// TEST_DATA is saved in TestData file
-let TEST_MESSAGES_SOURCE = TEST_DATA.SOURCE.CANNED;
+// by default, runAllTests will:
+// - reset and use the test spreadsheet
+// - use test messages built from the TestData file
+// - send error alerts to the test email
 
 function runAllTests() {
-    setTestConfigAndValues();
+    setGlobalVariables('test');
     resetTestSheet();
     checkForNewAlerts();
-}
-
-function setTestConfigAndValues() {
-    SPREADSHEET_ID = CONFIG.TEST.SPREADSHEET_ID;
-    ERROR_ALERT_EMAIL_ADDRESS = CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS;
-    PREP_MESSAGES_FROM_SOURCE = CONFIG.MESSAGE_SOURCE.TEST_DATA;
-    ERROR_EMAIL_MESSAGES.push('Script was run in test mode');
 }
 
 function resetTestSheet() {

@@ -1,9 +1,5 @@
 const STARTER_ENTRY_DATETIME = new Date(2023, 11, 31, 21, 59, 0, 0);
 const TEST_DATA = {
-    "SOURCE": {
-        "EMAIL": "Email",
-        "CANNED": "Canned"
-    },
     "SECTIONS": {
         "TRANSACTION": "[BECU]\n\nreplace-type-image-alt\n\nreplace-type-copy\n\nAn amount larger than $0.00 was spent from your 1234 * account.\n\n(Description)\n\n$replace-amount\n\nLog In To Account<link>\n\n",
         "END_CONTENT": "Start reducing debt now\n\nGive us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.\n\nLearn More<link>\n\nYou're receiving this email because you enabled notifications in BECU.\n\nManage Settings<link>\n\nBECU\n\n12770 Gateway Drive\n\n© 2023 All rights reserved"

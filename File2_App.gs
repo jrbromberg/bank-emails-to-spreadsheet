@@ -1,22 +1,5 @@
-const POST_PROCESS_LABEL = GmailApp.getUserLabelByName('TransactionAdded');
-const PRE_PROCESS_LABEL = GmailApp.getUserLabelByName('BankTransactionUpdate');
-const UNPROCESSED_ALERTS = PRE_PROCESS_LABEL.getThreads();
-const REGEX = {
-  ACCOUNT_NUM: /\d{4} \*/,
-  TRANS_TYPE: /(Large Pending Expense|Large Pending Deposit|Large Expense|Large Deposit)/,
-  PENDING: /Pending/,
-  AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-  EXPENSE: /Expense/,
-  DESCRIPTION: /\(.*\)/,
-  OTHER_CONTENT: /12770 Gateway Drive/
-}
-let TRANSACTIONS_SHEET = {}
-let ERROR_EMAIL_MESSAGES = [];
-let ERROR_OCCURRED = false;
-
 function checkForNewAlerts() {
-  setTransactionsSheet();
-  const preppedMessages = this[PREP_MESSAGES_FROM_SOURCE]();
+  const preppedMessages = getPreppedMessages();
   const newAlertsCount = preppedMessages.length;
   if (newAlertsCount > 0) {
     Logger.log(newAlertsCount + ' new alert messages found');
@@ -26,8 +9,14 @@ function checkForNewAlerts() {
   }
 }
 
-function setTransactionsSheet() {
-  TRANSACTIONS_SHEET = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Transactions');
+function getPreppedMessages() {
+  if (MESSAGE_SOURCE === 'email') {
+    return prepMessagesFromEmail();
+  } else if (MESSAGE_SOURCE === 'test-data') {
+    return prepMessagesFromTestData();
+  } else {
+    // throw error
+  }
 }
 
 function prepMessagesFromEmail() {
