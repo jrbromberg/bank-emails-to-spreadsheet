@@ -1,14 +1,6 @@
-// add your info here
-const SPREADSHEET_ID = 'PUT YOUR GOOGLE SPREADSHEET ID HERE';
-const ERROR_ALERT_EMAIL_ADDRESS = 'CHOOSE EMAIL ADDRESS FOR ERROR ALERTS';
-
-// if using with BECU, as of writing, no changes are needed below this line
-// setup your email, spreadsheet, and bank account alerts per the readme
-const TRANSACTIONS_SHEET = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Transactions');
 const POST_PROCESS_LABEL = GmailApp.getUserLabelByName('TransactionAdded');
 const PRE_PROCESS_LABEL = GmailApp.getUserLabelByName('BankTransactionUpdate');
 const UNPROCESSED_ALERTS = PRE_PROCESS_LABEL.getThreads();
-const ALL_MESSAGES = GmailApp.getMessagesForThreads(UNPROCESSED_ALERTS);
 const REGEX = {
   ACCOUNT_NUM: /\d{4} \*/,
   TRANS_TYPE: /(Large Pending Expense|Large Pending Deposit|Large Expense|Large Deposit)/,
@@ -18,23 +10,44 @@ const REGEX = {
   DESCRIPTION: /\(.*\)/,
   OTHER_CONTENT: /12770 Gateway Drive/
 }
+let TRANSACTIONS_SHEET = {}
 let ERROR_EMAIL_MESSAGES = [];
 let ERROR_OCCURRED = false;
 
 function checkForNewAlerts() {
-  const newAlertsCount = UNPROCESSED_ALERTS.length;
+  setTransactionsSheet();
+  const preppedMessages = this[PREP_MESSAGES_FROM_SOURCE]();
+  const newAlertsCount = preppedMessages.length;
   if (newAlertsCount > 0) {
     Logger.log(newAlertsCount + ' new alert messages found');
-    processBankAlerts();
+    processBankAlerts(preppedMessages);
   } else {
     Logger.log('No new alerts');
   }
 }
 
-function processBankAlerts() {
+function setTransactionsSheet() {
+  TRANSACTIONS_SHEET = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Transactions');
+}
+
+function prepMessagesFromEmail() {
+  let preppedMessages = [];
+  const allMessages = GmailApp.getMessagesForThreads(UNPROCESSED_ALERTS);
+  allMessages.forEach(thisMessage => {
+    let receivedTime = thisMessage[0].getDate();
+    let messageContent = thisMessage[0].getPlainBody();
+    let thisMessagePrepped = [receivedTime, messageContent];
+    preppedMessages.push(thisMessagePrepped);
+  });
+  return preppedMessages;
+}
+
+function processBankAlerts(preppedMessages) {
   try {
-    let transactionValues = fetchTransactionsFromBankEmails();
-    transactionValues.allNew.forEach(writeToTransactionsSheet);
+    let transactionValues = getTransactionsFromAllMessages(preppedMessages);
+    transactionValues.allNew.forEach(thisTransaction => {
+      writeToTransactionsSheet(thisTransaction, TRANSACTIONS_SHEET);
+    });
     Logger.log('Transactions added to sheet');
     reviewPendingTransactionsFromSheet(transactionValues.newCompleted);
     updateLabels();
@@ -49,29 +62,28 @@ function processBankAlerts() {
   }
 }
 
-function fetchTransactionsFromBankEmails() {
+function getTransactionsFromAllMessages(preppedMessages) {
   let allTransactionValues = {
     allNew: [],
     newCompleted: []
   }
-  for (let i = 0; i < ALL_MESSAGES.length; i++) {
-    let thisMessage = ALL_MESSAGES[i];
-    let receivedTime = thisMessage[0].getDate();
-    let messageContent = thisMessage[0].getPlainBody();
+  preppedMessages.forEach(thisMessage => {
+    let receivedTime = thisMessage[0]
+    let messageContent = thisMessage[1]
     Logger.log('Message:');
     Logger.log(messageContent);
     let messageSections = messageContent.split(new RegExp(`(?<=${REGEX.AMOUNT.source})`, "g"));
-    let messageTransactionValues = getValuesForMessageTransactions(messageSections, receivedTime);
+    let messageTransactionValues = getTransactionsFromThisMessage(messageSections, receivedTime);
     allTransactionValues.allNew.push(...messageTransactionValues.allNew);
     allTransactionValues.newCompleted.push(...messageTransactionValues.newCompleted);
-  }
+  });
   Logger.log(allTransactionValues.allNew.length + ' transactions found');
   Logger.log('Transactions:');
   Logger.log(allTransactionValues.allNew);
   return allTransactionValues;
 }
 
-function getValuesForMessageTransactions(messageSections, receivedTime) {
+function getTransactionsFromThisMessage(messageSections, receivedTime) {
   let valuesFromAllMessageTransactions = [];
   let newCompletedMessageTransactions = [];
   messageSections.forEach(thisSection => {
@@ -87,8 +99,9 @@ function getValuesForMessageTransactions(messageSections, receivedTime) {
         let valuesfromTransaction = [receivedTime, accountNum, transType, dollarAmount, transDescription];
         valuesFromAllMessageTransactions.push(valuesfromTransaction);
         if (REGEX.PENDING.test(transType) === false) {
-          let valuesMinusReceivedTime = valuesfromTransaction.slice(1);
-          newCompletedMessageTransactions.push(valuesMinusReceivedTime);
+          let valuesForComp = valuesfromTransaction.slice(1);
+          valuesForComp[2] = valuesForComp[2].replace(/,/g, '');
+          newCompletedMessageTransactions.push(valuesForComp);
         }
       } else if (!REGEX.OTHER_CONTENT.test(thisSection)) {
         ERROR_OCCURRED = true;
@@ -109,9 +122,9 @@ function getValuesForMessageTransactions(messageSections, receivedTime) {
   return messageTransactionValues;
 }
 
-function writeToTransactionsSheet(transactionValuesToWrite) {
-  TRANSACTIONS_SHEET.insertRowBefore(2);
-  TRANSACTIONS_SHEET.getRange(2, 1, 1, 5).setValues([transactionValuesToWrite]);
+function writeToTransactionsSheet(transactionValues, sheet) {
+  sheet.insertRowBefore(2);
+  sheet.getRange(2, 1, 1, 5).setValues([transactionValues]);
 }
 
 function reviewPendingTransactionsFromSheet(newCompletedTransactions) {
@@ -137,7 +150,7 @@ function getCurrentPendingTransactionsFromSheet(allRowsFromTransactionSheet) {
       let rowNumber = (index + 1);
       let accountNum = thisTransactionFromSheet[1].toString();
       let transType = thisTransactionFromSheet[2];
-      let dollarAmount = thisTransactionFromSheet[3].toString();
+      let dollarAmount = thisTransactionFromSheet[3].toFixed(2);
       let transDescription = thisTransactionFromSheet[4];
       currentPendingTransactions.push([rowNumber, [accountNum, transType, dollarAmount, transDescription]]);
     }
@@ -176,21 +189,6 @@ function updateLabels() {
   Logger.log('Email labels updated');
 }
 
-function labelReset() {
-  // for use during testing and development
-  let processedThreads = POST_PROCESS_LABEL.getThreads();
-  processedThreads.forEach(removeAllLabels);
-  UNPROCESSED_ALERTS.forEach(removeAllLabels);
-  function removeAllLabels(thread) {
-    let labels = thread.getLabels();
-    labels.forEach(removeThisLabel);
-    function removeThisLabel(thisLabel) {
-      thread.removeLabel(thisLabel);
-    }
-  }
-  Logger.log('Labels reset');
-}
-
 function sendErrorAlertEmail() {
   MailApp.sendEmail({
     to: ERROR_ALERT_EMAIL_ADDRESS,
@@ -198,16 +196,4 @@ function sendErrorAlertEmail() {
     body: ERROR_EMAIL_MESSAGES.join('\n')
   });
   Logger.log('Error email sent');
-}
-
-function testErrorEmail() {
-  // for use during testing and development
-  try {
-    throw new Error("Test error");
-  } catch (error) {
-    console.error('Error:', error.message);
-    console.error(error.stack);
-    ERROR_EMAIL_MESSAGES.push('This is a test error email message.');
-    sendErrorAlertEmail();
-  }
 }
