@@ -4,13 +4,12 @@
 // - send error alerts to the test email
 
 function runAllTests() {
-    setGlobalVariables('test');
     resetTestSheet();
-    checkForNewAlerts();
+    checkForNewAlerts('test');
 }
 
 function resetTestSheet() {
-    const testSheet = SpreadsheetApp.openById(CONFIG.TEST.SPREADSHEET_ID).getSheetByName('Transactions');
+    const testSheet = getTransactionsSheet(CONFIG.TEST.SPREADSHEET_ID);
     testSheet.getRange(2, 1, testSheet.getLastRow() - 1, testSheet.getLastColumn()).clearContent();
     TEST_DATA.SHEET_START_VALUES.ROWS.forEach(rowValues => {
         writeToTransactionsSheet(rowValues, testSheet);
@@ -97,9 +96,9 @@ function replaceSectionValues(amount, type) {
 }
 
 function removeAllLabels() {
-    let processedThreads = POST_PROCESS_LABEL.getThreads();
+    let processedThreads = GLOBAL_CONST.POST_PROCESS_LABEL.getThreads();
     processedThreads.forEach(removeAllLabels);
-    UNPROCESSED_ALERTS.forEach(removeAllLabels);
+    GLOBAL_CONST.UNPROCESSED_ALERTS.forEach(removeAllLabels);
     function removeAllLabels(thread) {
         let labels = thread.getLabels();
         labels.forEach(removeThisLabel);
@@ -108,15 +107,4 @@ function removeAllLabels() {
         }
     }
     Logger.log('All labels removed');
-}
-
-function testErrorEmail() {
-    try {
-        throw new Error("Test error");
-    } catch (error) {
-        console.error('Error:', error.message);
-        console.error(error.stack);
-        ERROR_EMAIL_MESSAGES.push('This is a test error email message.');
-        sendErrorAlertEmail();
-    }
 }

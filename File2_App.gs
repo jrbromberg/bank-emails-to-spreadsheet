@@ -1,4 +1,6 @@
-function checkForNewAlerts() {
+function checkForNewAlerts(setting) {
+  setting = setting !== undefined ? setting : 'production';
+  setGlobalValues(setting);
   const preppedMessages = getPreppedMessages();
   const newAlertsCount = preppedMessages.length;
   if (newAlertsCount > 0) {
@@ -10,9 +12,9 @@ function checkForNewAlerts() {
 }
 
 function getPreppedMessages() {
-  if (MESSAGE_SOURCE === 'email') {
+  if (GLOBAL_CONST.MESSAGE_SOURCE === 'email') {
     return prepMessagesFromEmail();
-  } else if (MESSAGE_SOURCE === 'test-data') {
+  } else if (GLOBAL_CONST.MESSAGE_SOURCE === 'test-data') {
     return prepMessagesFromTestData();
   } else {
     // throw error
@@ -21,7 +23,7 @@ function getPreppedMessages() {
 
 function prepMessagesFromEmail() {
   let preppedMessages = [];
-  const allMessages = GmailApp.getMessagesForThreads(UNPROCESSED_ALERTS);
+  const allMessages = GmailApp.getMessagesForThreads(GLOBAL_CONST.UNPROCESSED_ALERTS);
   allMessages.forEach(thisMessage => {
     let receivedTime = thisMessage[0].getDate();
     let messageContent = thisMessage[0].getPlainBody();
@@ -35,18 +37,18 @@ function processBankAlerts(preppedMessages) {
   try {
     let transactionValues = getTransactionsFromAllMessages(preppedMessages);
     transactionValues.allNew.forEach(thisTransaction => {
-      writeToTransactionsSheet(thisTransaction, TRANSACTIONS_SHEET);
+      writeToTransactionsSheet(thisTransaction, GLOBAL_CONST.TRANSACTIONS_SHEET);
     });
     Logger.log('Transactions added to sheet');
     reviewPendingTransactionsFromSheet(transactionValues.newCompleted);
     updateLabels();
   } catch (error) {
-    ERROR_OCCURRED = true;
+    GLOBAL_VAR.ERROR_OCCURRED = true;
     console.error('Error:', error.message);
     console.error(error.stack);
-    ERROR_EMAIL_MESSAGES.push('An error occured while trying to process one or more bank alerts.');
+    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('An error occured while trying to process one or more bank alerts.');
   }
-  if (ERROR_OCCURRED) {
+  if (GLOBAL_VAR.ERROR_OCCURRED) {
     sendErrorAlertEmail();
   }
 }
@@ -61,7 +63,7 @@ function getTransactionsFromAllMessages(preppedMessages) {
     let messageContent = thisMessage[1]
     Logger.log('Message:');
     Logger.log(messageContent);
-    let messageSections = messageContent.split(new RegExp(`(?<=${REGEX.AMOUNT.source})`, "g"));
+    let messageSections = messageContent.split(new RegExp(`(?<=${GLOBAL_CONST.REGEX.AMOUNT.source})`, "g"));
     let messageTransactionValues = getTransactionsFromThisMessage(messageSections, receivedTime);
     allTransactionValues.allNew.push(...messageTransactionValues.allNew);
     allTransactionValues.newCompleted.push(...messageTransactionValues.newCompleted);
@@ -77,31 +79,31 @@ function getTransactionsFromThisMessage(messageSections, receivedTime) {
   let newCompletedMessageTransactions = [];
   messageSections.forEach(thisSection => {
     try {
-      if (REGEX.ACCOUNT_NUM.test(thisSection)) {
-        let accountNum = thisSection.match(REGEX.ACCOUNT_NUM)[0].slice(0, 4);
-        let transType = thisSection.match(REGEX.TRANS_TYPE)[0].replace('Large ', '');
-        let dollarAmount = thisSection.match(REGEX.AMOUNT)[0].replace('$', '');
-        if (REGEX.EXPENSE.test(transType)) {
+      if (GLOBAL_CONST.REGEX.ACCOUNT_NUM.test(thisSection)) {
+        let accountNum = thisSection.match(GLOBAL_CONST.REGEX.ACCOUNT_NUM)[0].slice(0, 4);
+        let transType = thisSection.match(GLOBAL_CONST.REGEX.TRANS_TYPE)[0].replace('Large ', '');
+        let dollarAmount = thisSection.match(GLOBAL_CONST.REGEX.AMOUNT)[0].replace('$', '');
+        if (GLOBAL_CONST.REGEX.EXPENSE.test(transType)) {
           dollarAmount = ('-' + dollarAmount);
         }
-        let transDescription = thisSection.match(REGEX.DESCRIPTION)[0].slice(1).slice(0, -1);
+        let transDescription = thisSection.match(GLOBAL_CONST.REGEX.DESCRIPTION)[0].slice(1).slice(0, -1);
         let valuesfromTransaction = [receivedTime, accountNum, transType, dollarAmount, transDescription];
         valuesFromAllMessageTransactions.push(valuesfromTransaction);
-        if (REGEX.PENDING.test(transType) === false) {
+        if (GLOBAL_CONST.REGEX.PENDING.test(transType) === false) {
           let valuesForComp = valuesfromTransaction.slice(1);
           valuesForComp[2] = valuesForComp[2].replace(/,/g, '');
           newCompletedMessageTransactions.push(valuesForComp);
         }
-      } else if (!REGEX.OTHER_CONTENT.test(thisSection)) {
-        ERROR_OCCURRED = true;
+      } else if (!GLOBAL_CONST.REGEX.OTHER_CONTENT.test(thisSection)) {
+        GLOBAL_VAR.ERROR_OCCURRED = true;
         console.error('Error: Unexpected non-matching content');
-        ERROR_EMAIL_MESSAGES.push('Unexpected non-transaction content was found.');
+        GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected non-transaction content was found.');
       }
     } catch (error) {
-      ERROR_OCCURRED = true;
+      GLOBAL_VAR.ERROR_OCCURRED = true;
       console.error('Error:', error.message);
       console.error(error.stack);
-      ERROR_EMAIL_MESSAGES.push('An error occured while using regex to scrape transaction values.');
+      GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('An error occured while using regex to scrape transaction values.');
     }
   });
   let messageTransactionValues = {
@@ -118,7 +120,7 @@ function writeToTransactionsSheet(transactionValues, sheet) {
 
 function reviewPendingTransactionsFromSheet(newCompletedTransactions) {
   if (newCompletedTransactions.length > 0) {
-    const allRowsFromTransactionSheet = TRANSACTIONS_SHEET.getDataRange().getValues();
+    const allRowsFromTransactionSheet = GLOBAL_CONST.TRANSACTIONS_SHEET.getDataRange().getValues();
     let currentPendingTransactions = getCurrentPendingTransactionsFromSheet(allRowsFromTransactionSheet);
     if (currentPendingTransactions.length > 0) {
       var anyPendingTransactionWasResolved = resolveAnyCompletedPendingTransactions(
@@ -135,7 +137,7 @@ function reviewPendingTransactionsFromSheet(newCompletedTransactions) {
 function getCurrentPendingTransactionsFromSheet(allRowsFromTransactionSheet) {
   let currentPendingTransactions = [];
   allRowsFromTransactionSheet.forEach((thisTransactionFromSheet, index) => {
-    if (REGEX.PENDING.test(thisTransactionFromSheet)) {
+    if (GLOBAL_CONST.REGEX.PENDING.test(thisTransactionFromSheet)) {
       let rowNumber = (index + 1);
       let accountNum = thisTransactionFromSheet[1].toString();
       let transType = thisTransactionFromSheet[2];
@@ -158,7 +160,7 @@ function resolveAnyCompletedPendingTransactions(newCompletedTransactions, curren
         Logger.log('Found completed pending transaction:');
         Logger.log(thisPendingTransaction[1]);
         Logger.log(thisNewCompletedTransaction);
-        TRANSACTIONS_SHEET.deleteRow(thisPendingTransaction[0]);
+        GLOBAL_CONST.TRANSACTIONS_SHEET.deleteRow(thisPendingTransaction[0]);
         currentPendingTransactions.splice(i, 1);
         i--;
         anyPendingTransactionWasResolved = true;
@@ -171,18 +173,18 @@ function resolveAnyCompletedPendingTransactions(newCompletedTransactions, curren
 }
 
 function updateLabels() {
-  UNPROCESSED_ALERTS.forEach(thisThread => {
-    thisThread.addLabel(POST_PROCESS_LABEL);
-    thisThread.removeLabel(PRE_PROCESS_LABEL);
+  GLOBAL_CONST.UNPROCESSED_ALERTS.forEach(thisThread => {
+    thisThread.addLabel(GLOBAL_CONST.POST_PROCESS_LABEL);
+    thisThread.removeLabel(GLOBAL_CONST.PRE_PROCESS_LABEL);
   });
   Logger.log('Email labels updated');
 }
 
 function sendErrorAlertEmail() {
   MailApp.sendEmail({
-    to: ERROR_ALERT_EMAIL_ADDRESS,
-    subject: 'Financial Dashboard Error',
-    body: ERROR_EMAIL_MESSAGES.join('\n')
+    to: GLOBAL_CONST.ERROR_ALERT_EMAIL_ADDRESS,
+    subject: GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT,
+    body: GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join('\n')
   });
   Logger.log('Error email sent');
 }
