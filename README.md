@@ -75,7 +75,7 @@ Save and deploy.  You will need to allow access and should be prompted to do so.
 For automated testing:<br>
 Run the `runAllTests` function in the `File4_Test` file.  To spot check, I check that transactions values are populated in the test sheet, only one pending transaction remains in the test sheet after the script runs, and just the one intended error comes up in the log (Error: Unexpected non-matching content).
 
-For production testing:
+For production testing:<br>
 Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`.  Run the `checkForNewAlerts` function.  Check the log, spreadsheet, and updated email labels to ensure everything is working.
 
 Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
