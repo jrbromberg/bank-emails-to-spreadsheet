@@ -66,7 +66,7 @@ Create files in your Google Apps Script project with each of the names below and
 - `File3_TestData`
 - `File4_Test`
 
-Enter your spreadsheet IDs and error alert email addresses at the top of the `File1_Config` file.  A Google spreadsheet ID can be found in its URL. I like to use my personal email for the production error alert email and the host email for the test error alert email.
+Enter your spreadsheet IDs and error alert email addresses at the top of the `File1_Config` file.  Your Google spreadsheet IDs can be found in their URLs. I like to use my personal email for the production error alert email and the host email for the test error alert email.
 
 ### 6. Testing and deployment
 
