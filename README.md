@@ -68,7 +68,7 @@ Create four files with the below names and make sure to KEEP THIS ORDER, order m
 
 Replace the content of each file with the content from the corresponding files in this repo.
 
-Update the code at the top of the File1_Config file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
+Update the code at the top of the `File1_Config` file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
 
 ### 6. Testing and deployment
 
