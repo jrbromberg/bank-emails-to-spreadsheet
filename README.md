@@ -60,7 +60,7 @@ Go to Google Apps Script at https://script.google.com/home.  Make sure you are i
 
 Create a new project. Name it whatever you like.
 
-Create a file in your Google Apps Script project with each of the names below and make sure to USE THE SAME ORDER, order counts. Replace all content in the files with the content from the corresponding files in this repo.
+Create files in your Google Apps Script project with each of the names below and make sure to USE THE SAME ORDER, order counts. Replace all content in the files with the content from the corresponding files in this repo.
 - `File1_Config`
 - `File2_App`
 - `File3_TestData`
