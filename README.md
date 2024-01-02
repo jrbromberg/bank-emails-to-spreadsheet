@@ -53,7 +53,7 @@ In your new host Gmail account, create a new spreadsheet by importing the `bank_
 
 You can share the spreadsheet with a personal Gmail account as view only.  This makes it easy to view without any worry of accidental edits.
 
-If you would like to use the automated testing, duplicate the spreadsheet and name it for testing.
+If you would like to use the automated testing, duplicate the spreadsheet for use as the test spreadsheet.
 
 ### 5. Google Apps Script
 Go to Google Apps Script at https://script.google.com/home.  Make sure you are in the host Gmail account.
