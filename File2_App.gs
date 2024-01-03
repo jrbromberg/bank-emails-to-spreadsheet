@@ -1,15 +1,22 @@
 function checkForNewAlerts(setting) {
-  if (setting === undefined || typeof setting !== 'string') {
-    setting = 'production';
-  }
-  setGlobalValues(setting);
-  const preppedMessages = getPreppedMessages();
-  const newAlertsCount = preppedMessages.length;
-  if (newAlertsCount > 0) {
-    Logger.log(newAlertsCount + ' new alert messages found');
-    processBankAlerts(preppedMessages);
-  } else {
-    Logger.log('No new alerts');
+  try {
+    if (setting === undefined || typeof setting !== 'string') {
+      setting = 'production';
+    }
+    setGlobalValues(setting);
+    const preppedMessages = getPreppedMessages();
+    const newAlertsCount = preppedMessages.length;
+    if (newAlertsCount > 0) {
+      Logger.log(newAlertsCount + ' new alert messages found');
+      processBankAlerts(preppedMessages);
+    } else {
+      Logger.log('No new alerts');
+    }
+  } catch {
+    GLOBAL_VAR.ERROR_OCCURRED = true;
+    console.error('Error:', error.message);
+    console.error(error.stack);
+    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('The script was not able to run');
   }
 }
 
@@ -19,7 +26,9 @@ function getPreppedMessages() {
   } else if (GLOBAL_CONST.MESSAGE_SOURCE === 'test-data') {
     return prepMessagesFromTestData();
   } else {
-    // throw error
+    GLOBAL_VAR.ERROR_OCCURRED = true;
+    console.error('Error: Unexpected messsage source');
+    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected messsage source defined');
   }
 }
 

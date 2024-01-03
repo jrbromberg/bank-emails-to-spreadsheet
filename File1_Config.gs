@@ -25,11 +25,15 @@ function setGlobalValues(setting) {
         } else if (setting === 'test') {
             setTestGlobalValues();
         } else {
-            //throw error
+            GLOBAL_VAR.ERROR_OCCURRED = true;
+            console.error('Error: Unexpected setGlobalValues parameter');
+            GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected global setting');
         }
         Object.freeze(GLOBAL_CONST);
     } else {
-        // throw error
+        GLOBAL_VAR.ERROR_OCCURRED = true;
+        console.error('Error: setGlobalValues was called without a paramter');
+        GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Global values function was called without a required paramter');
     }
 }
 

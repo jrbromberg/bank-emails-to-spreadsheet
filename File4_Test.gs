@@ -23,7 +23,7 @@ function prepMessagesFromTestData() {
         getTestMessageContentForResolvePendingFromPreExisting(),
         getTestMessageContentForResolve3PendingFromPreExisting(),
         getTestMessageContentForResolvePendingFromConcurrent(),
-        //getTestMessageContentForLowBalanceAlert(),
+        getTestMessageContentForLowBalanceAlert(),
         getTestMessageContentForUnknownEndContent()
     ];
     const receivedTime = new Date();
@@ -77,7 +77,7 @@ function getTestMessageContentForResolvePendingFromConcurrent() {
 }
 
 function getTestMessageContentForLowBalanceAlert() {
-    // figure this one out when i'm ready to solve the issue
+    return ''.concat(TEST_DATA.SECTIONS.LOW_BALANCE, TEST_DATA.SECTIONS.END_CONTENT)
 }
 
 function getTestMessageContentForUnknownEndContent() {
