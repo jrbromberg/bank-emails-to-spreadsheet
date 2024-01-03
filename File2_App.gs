@@ -1,5 +1,7 @@
 function checkForNewAlerts(setting) {
-  setting = setting !== undefined ? setting : 'production';
+  if (setting === undefined || typeof setting !== 'string') {
+    setting = 'production';
+  }
   setGlobalValues(setting);
   const preppedMessages = getPreppedMessages();
   const newAlertsCount = preppedMessages.length;
@@ -79,7 +81,7 @@ function getTransactionsFromThisMessage(messageSections, receivedTime) {
   let newCompletedMessageTransactions = [];
   messageSections.forEach(thisSection => {
     try {
-      if (GLOBAL_CONST.REGEX.ACCOUNT_NUM.test(thisSection)) {
+      if (GLOBAL_CONST.REGEX.TRANS_TYPE.test(thisSection)) {
         let accountNum = thisSection.match(GLOBAL_CONST.REGEX.ACCOUNT_NUM)[0].slice(0, 4);
         let transType = thisSection.match(GLOBAL_CONST.REGEX.TRANS_TYPE)[0].replace('Large ', '');
         let dollarAmount = thisSection.match(GLOBAL_CONST.REGEX.AMOUNT)[0].replace('$', '');
@@ -94,6 +96,8 @@ function getTransactionsFromThisMessage(messageSections, receivedTime) {
           valuesForComp[2] = valuesForComp[2].replace(/,/g, '');
           newCompletedMessageTransactions.push(valuesForComp);
         }
+      } else if (GLOBAL_CONST.REGEX.NON_TRANS_TYPE.test(thisSection)) {
+        Logger.log('Non transaction email alert');
       } else if (!GLOBAL_CONST.REGEX.OTHER_CONTENT.test(thisSection)) {
         GLOBAL_VAR.ERROR_OCCURRED = true;
         console.error('Error: Unexpected non-matching content');
