@@ -46,7 +46,10 @@ function sendErrorAlertEmail() {
         subjectValue = GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT;
         bodyValue = GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join('\n');
     } else {
-        toValue = [CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS, CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS];
+        toValue = [
+            CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
+            CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS
+        ].join(',');
         subjectValue = 'Bank Email Scraper Alert';
         bodyValue = 'The script failed early on';
     }
