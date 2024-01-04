@@ -66,7 +66,7 @@ Create four script files with the below names. Replace the content of each file 
 - `Test.gs`
 - `TestData.gs`
 
-Update the code at the top of the `Config` file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
+Update the code at the top of the `Config.gs` file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
 
 ### 6. Testing and deployment
 
