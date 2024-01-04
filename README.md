@@ -73,10 +73,10 @@ Update the code at the top of the `Config` file. Enter your spreadsheet IDs and 
 Save and deploy.  You will need to allow access and should be prompted to do so.
 
 For automated testing with built-in test data:<br>
-Run the `runAllTests` function from the `File4_Test` file. I spot check the test by making sure the transactions sheet was filled up, there is only one pending transaction left in the transaction sheet, and there is only the one intended error (Unexpected non-transaction content was found.) in the log.
+Run the `runAllTests` function from the `Test` file. I spot check the test by making sure the transactions sheet was filled up, there is only one pending transaction left in the transaction sheet, and there is only the one intended error (Unexpected non-transaction content was found.) in the log.
 
 For production testing:<br>
-Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`. Run the `checkForNewAlerts` function from the `File2_App` file. Check the log, spreadsheet, and updated email labels to ensure everything is working correctly.
+Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`. Run the `checkForNewAlerts` function from the `App` file. Check the log, spreadsheet, and updated email labels to ensure everything is working correctly.
 
 Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
 
