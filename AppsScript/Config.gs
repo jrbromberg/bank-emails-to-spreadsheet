@@ -1,20 +1,25 @@
-const CONFIG = {
-    "PRODUCTION": {
-        "SPREADSHEET_ID": "PUT GOOGLE SPREADSHEET ID HERE",
-        "ERROR_ALERT_EMAIL_ADDRESS": "PUT EMAIL FOR ERROR ALERTS HERE"
-    },
-    "TEST": {
-        "SPREADSHEET_ID": "PUT TEST GOOGLE SPREADSHEET ID HERE",
-        "ERROR_ALERT_EMAIL_ADDRESS": "PUT EMAIL FOR TEST ERROR ALERTS HERE"
+function setConfig() {
+    CONFIG = {
+        "PRODUCTION": {
+            "SPREADSHEET_ID": "PUT GOOGLE SPREADSHEET ID HERE",
+            "ERROR_ALERT_EMAIL_ADDRESS": "PUT EMAIL FOR ERROR ALERTS HERE"
+        },
+        "TEST": {
+            "SPREADSHEET_ID": "PUT TEST GOOGLE SPREADSHEET ID HERE",
+            "ERROR_ALERT_EMAIL_ADDRESS": "PUT EMAIL FOR TEST ERROR ALERTS HERE"
+        }
     }
+    Object.freeze(CONFIG);
 }
 
 // enter your spreadsheet and email address info into the above CONFIG object
 // if using with BECU, no other changes are needed
 // setup your email, spreadsheet, and bank account alerts per the readme
 
-initErrorHandling();
-function initErrorHandling() {
+setConfig();
+initGlobalVarAndErrorHandling();
+
+function initGlobalVarAndErrorHandling() {
     GLOBAL_VAR = {}
     GLOBAL_VAR.ERROR_EMAIL_MESSAGES = [];
     GLOBAL_VAR.ERROR_OCCURRED = false;
