@@ -45,4 +45,5 @@ function setTestData() {
             PENDING_DESCRIPTION: "(Test pending exp.)"
         }
     }
+    Object.freeze(TEST_DATA);
 }
