@@ -13,27 +13,65 @@ const CONFIG = {
 // if using with BECU, no other changes are needed
 // setup your email, spreadsheet, and bank account alerts per the readme
 
+initErrorHandling();
+function initErrorHandling() {
+    GLOBAL_VAR = {}
+    GLOBAL_VAR.ERROR_EMAIL_MESSAGES = [];
+    GLOBAL_VAR.ERROR_OCCURRED = false;
+}
+
+function addError(error, separateEmailMessage) {
+    try {
+        GLOBAL_VAR.ERROR_OCCURRED = true;
+        if (error instanceof Error) {
+            GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push(separateEmailMessage ?? error.message);
+            console.error(error.message);
+            console.error(error.stack);
+        } else {
+            console.error('addError was not given an Error object');
+            sendErrorAlertEmail();
+        }
+    } catch (error) {
+        GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Error occured in the addError function');
+        console.error(error.message);
+        console.error(error.stack);
+        sendErrorAlertEmail();
+    }
+}
+
+function sendErrorAlertEmail() {
+    let toValue, subjectValue, bodyValue;
+    if (typeof GLOBAL_CONST !== 'undefined' && GLOBAL_CONST !== null) {
+        toValue = GLOBAL_CONST.ERROR_ALERT_EMAIL_ADDRESS;
+        subjectValue = GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT;
+        bodyValue = GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join('\n');
+    } else {
+        toValue = [CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS, CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS];
+        subjectValue = 'Bank Email Scraper Alert';
+        bodyValue = 'The script failed early on';
+    }
+    MailApp.sendEmail({
+        to: toValue,
+        subject: subjectValue,
+        body: bodyValue
+    });
+    Logger.log('Error email sent');
+}
+
 function setGlobalValues(setting) {
-    if ((typeof GLOBAL_CONST === 'undefined' || GLOBAL_CONST === null) &&
-        (typeof GLOBAL_VAR === 'undefined' || GLOBAL_VAR === null)
-    ) {
+    if (typeof GLOBAL_CONST === 'undefined' || GLOBAL_CONST === null) {
         GLOBAL_CONST = {}
-        GLOBAL_VAR = {}
         setDefaultGlobalValues();
         if (setting === 'production') {
             setProductionGlobalValues();
         } else if (setting === 'test') {
             setTestGlobalValues();
         } else {
-            GLOBAL_VAR.ERROR_OCCURRED = true;
-            console.error('Error: Unexpected setGlobalValues parameter');
-            GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected global setting');
+            addError(new Error('Unexpected setting in setGlobalValues'));
         }
         Object.freeze(GLOBAL_CONST);
     } else {
-        GLOBAL_VAR.ERROR_OCCURRED = true;
-        console.error('Error: setGlobalValues was called without a paramter');
-        GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Global values function was called without a required paramter');
+        addError(new Error('There was an error in setGlobalValues'));
     }
 }
 
@@ -51,8 +89,6 @@ function setDefaultGlobalValues() {
         DESCRIPTION: /\(.*\)/,
         OTHER_CONTENT: /12770 Gateway Drive/
     }
-    GLOBAL_VAR.ERROR_EMAIL_MESSAGES = [];
-    GLOBAL_VAR.ERROR_OCCURRED = false;
 }
 
 function setProductionGlobalValues() {

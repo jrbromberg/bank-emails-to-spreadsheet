@@ -12,11 +12,11 @@ function checkForNewAlerts(setting) {
     } else {
       Logger.log('No new alerts');
     }
-  } catch {
-    GLOBAL_VAR.ERROR_OCCURRED = true;
-    console.error('Error:', error.message);
-    console.error(error.stack);
-    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('The script was not able to run');
+  } catch (error) {
+    addError(error, 'The script was not able to run')
+  }
+  if (GLOBAL_VAR.ERROR_OCCURRED) {
+    sendErrorAlertEmail();
   }
 }
 
@@ -26,9 +26,7 @@ function getPreppedMessages() {
   } else if (GLOBAL_CONST.MESSAGE_SOURCE === 'test-data') {
     return prepMessagesFromTestData();
   } else {
-    GLOBAL_VAR.ERROR_OCCURRED = true;
-    console.error('Error: Unexpected messsage source');
-    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected messsage source defined');
+    addError(new Error('Unexpected message source specified'))
   }
 }
 
@@ -54,13 +52,7 @@ function processBankAlerts(preppedMessages) {
     reviewPendingTransactionsFromSheet(transactionValues.newCompleted);
     updateLabels();
   } catch (error) {
-    GLOBAL_VAR.ERROR_OCCURRED = true;
-    console.error('Error:', error.message);
-    console.error(error.stack);
-    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('An error occured while trying to process one or more bank alerts.');
-  }
-  if (GLOBAL_VAR.ERROR_OCCURRED) {
-    sendErrorAlertEmail();
+    addError(error, 'Error occursed while processing the email alerts');
   }
 }
 
@@ -108,15 +100,10 @@ function getTransactionsFromThisMessage(messageSections, receivedTime) {
       } else if (GLOBAL_CONST.REGEX.NON_TRANS_TYPE.test(thisSection)) {
         Logger.log('Non transaction email alert');
       } else if (!GLOBAL_CONST.REGEX.OTHER_CONTENT.test(thisSection)) {
-        GLOBAL_VAR.ERROR_OCCURRED = true;
-        console.error('Error: Unexpected non-matching content');
-        GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('Unexpected non-transaction content was found.');
+        addError(new Error('Unexpected content in email'));
       }
     } catch (error) {
-      GLOBAL_VAR.ERROR_OCCURRED = true;
-      console.error('Error:', error.message);
-      console.error(error.stack);
-      GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push('An error occured while using regex to scrape transaction values.');
+      addError(error, 'Error occured while getting values via regex');
     }
   });
   let messageTransactionValues = {
@@ -191,13 +178,4 @@ function updateLabels() {
     thisThread.removeLabel(GLOBAL_CONST.PRE_PROCESS_LABEL);
   });
   Logger.log('Email labels updated');
-}
-
-function sendErrorAlertEmail() {
-  MailApp.sendEmail({
-    to: GLOBAL_CONST.ERROR_ALERT_EMAIL_ADDRESS,
-    subject: GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT,
-    body: GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join('\n')
-  });
-  Logger.log('Error email sent');
 }
