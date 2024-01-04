@@ -4,6 +4,7 @@
 // - send error alerts to the test email
 
 function runAllTests() {
+    setTestData();
     resetTestSheet();
     checkForNewAlerts('test');
 }

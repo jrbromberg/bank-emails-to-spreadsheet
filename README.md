@@ -60,13 +60,13 @@ Go to Google Apps Script at https://script.google.com/home.  Make sure you are i
 
 Create a new project. Name it whatever you like.
 
-Create four files with the below names and make sure to KEEP THIS ORDER, order matters.
-- `File1_Config`
-- `File2_App`
-- `File3_TestData`
-- `File4_Test`
+Create four files with the below names.  Make sure to KEEP `_1stFile_Config` AS THE FIRST FILE.
+- `_1stFile_Config`
+- `App`
+- `Test`
+- `TestData`
 
-Replace the content of each file with the content from the corresponding files in this repo.
+Replace the content of each file with the content from the files in the AppsScript folder in this repo.
 
 Update the code at the top of the `File1_Config` file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
 
