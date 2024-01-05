@@ -1,8 +1,6 @@
 function checkForNewAlerts(setting) {
   try {
-    if (setting === undefined || typeof setting !== 'string') {
-      setting = 'production';
-    }
+    setting = typeof setting !== 'string' ? 'production' : setting;
     setGlobalValues(setting);
     const preppedMessages = getPreppedMessages();
     const newAlertsCount = preppedMessages.length;
