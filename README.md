@@ -46,7 +46,16 @@ Create a filter to label incoming bank alerts.  Use these settings:
 Setup bank alerts to consider anything over zero dollars as a large transaction.  Have bank alerts sent to your personal email.
 
 ### 3. Personal email
-Setup rule to REDIRECT large transaction bank alert emails from your personal email to your new host Gmail account.
+Setup rule to redirect transaction bank alert emails from your personal email to your new host Gmail account.  Make sure the bank's email address appears as the "from email" in the redirected emails received by the host Gmail.  The method to accomplish this will vary based on your personal email provider.
+
+If personal email provider is Outlook:
+1. Setup a Rule to REDIRECT emails from the bank's notification email address.
+
+If personal email provider is Gmail:
+1. Add your host Gmail as a forwarding address in the "Forwarding and POP/IMAP" section of settings.  DO NOT proceed to "Forward a copy of incoming mail" in this section. Doing so would forward all emails.
+2. Create a filter to forward the incoming bank alerts.  The "Forward it to" option will have been un-greyed by the first step.
+- `Forward it to: replace.with.your.host.gmail@gmail.com`
+- `Never send it to Spam`
 
 ### 4. Spreadsheet
 In your new host Gmail account, create a new spreadsheet by importing the `bank_email_scraper_starter_spreadsheet.ods` file found in this repo.  You may name the spreadsheet whatever you like.  Do not change the name of the "Transactions" tab/sheet.
