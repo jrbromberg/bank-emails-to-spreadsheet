@@ -30,10 +30,9 @@ function getPreppedMessages() {
 
 function prepMessagesFromEmail() {
   let preppedMessages = [];
-  const allMessages = GmailApp.getMessagesForThreads(GLOBAL_CONST.UNPROCESSED_ALERTS);
-  allMessages.forEach(thisMessage => {
-    let receivedTime = thisMessage[0].getDate();
-    let messageContent = thisMessage[0].getPlainBody();
+  GLOBAL_CONST.STARRED_MESSAGES.forEach(thisMessage => {
+    let receivedTime = thisMessage.getDate();
+    let messageContent = thisMessage.getPlainBody();
     let thisMessagePrepped = [receivedTime, messageContent];
     preppedMessages.push(thisMessagePrepped);
   });
@@ -48,7 +47,7 @@ function processBankAlerts(preppedMessages) {
     });
     Logger.log('Transactions added to sheet');
     reviewPendingTransactionsFromSheet(transactionValues.newCompleted);
-    updateLabels();
+    updateStars();
   } catch (error) {
     addError(error, 'Error occursed while processing the email alerts');
   }
@@ -170,10 +169,7 @@ function resolveAnyCompletedPendingTransactions(newCompletedTransactions, curren
   return anyPendingTransactionWasResolved;
 }
 
-function updateLabels() {
-  GLOBAL_CONST.UNPROCESSED_ALERTS.forEach(thisThread => {
-    thisThread.addLabel(GLOBAL_CONST.POST_PROCESS_LABEL);
-    thisThread.removeLabel(GLOBAL_CONST.PRE_PROCESS_LABEL);
-  });
-  Logger.log('Email labels updated');
+function updateStars() {
+  GmailApp.unstarMessages(GLOBAL_CONST.STARRED_MESSAGES);
+  Logger.log('Message stars updated');
 }

@@ -84,9 +84,8 @@ function setGlobalValues(setting) {
 }
 
 function setDefaultGlobalValues() {
-    GLOBAL_CONST.POST_PROCESS_LABEL = GmailApp.getUserLabelByName('TransactionAdded');
-    GLOBAL_CONST.PRE_PROCESS_LABEL = GmailApp.getUserLabelByName('BankTransactionUpdate');
-    GLOBAL_CONST.UNPROCESSED_ALERTS = GLOBAL_CONST.PRE_PROCESS_LABEL.getThreads();
+    GLOBAL_CONST.SEARCH = 'label:banktransactionupdate is:starred';
+    GLOBAL_CONST.STARRED_MESSAGES = getStarredMessages();
     GLOBAL_CONST.REGEX = {
         ACCOUNT_NUM: /\d{4} \*/,
         TRANS_TYPE: /(Large Pending Expense|Large Pending Deposit|Large Expense|Large Deposit)/,
@@ -98,6 +97,19 @@ function setDefaultGlobalValues() {
         OTHER_CONTENT: /12770 Gateway Drive/
     }
 }
+
+function getStarredMessages() {
+    let starredMessages = [];
+    const matchingThreads = GmailApp.search(GLOBAL_CONST.SEARCH);
+    const threadMessageArrays = GmailApp.getMessagesForThreads(matchingThreads);
+    const allMessages = [].concat(...threadMessageArrays);
+    allMessages.forEach(thisMessage => {
+        if (thisMessage.isStarred()) {
+            starredMessages.push(thisMessage);
+        }
+    });
+    return starredMessages;
+  }
 
 function setProductionGlobalValues() {
     GLOBAL_CONST.TRANSACTIONS_SHEET = getTransactionsSheet(CONFIG.PRODUCTION.SPREADSHEET_ID);

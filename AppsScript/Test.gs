@@ -95,17 +95,3 @@ function replaceSectionValues(amount, type) {
     section = section.replace('replace-amount', amount);
     return section;
 }
-
-function removeAllLabels() {
-    let processedThreads = GLOBAL_CONST.POST_PROCESS_LABEL.getThreads();
-    processedThreads.forEach(removeAllLabels);
-    GLOBAL_CONST.UNPROCESSED_ALERTS.forEach(removeAllLabels);
-    function removeAllLabels(thread) {
-        let labels = thread.getLabels();
-        labels.forEach(removeThisLabel);
-        function removeThisLabel(thisLabel) {
-            thread.removeLabel(thisLabel);
-        }
-    }
-    Logger.log('All labels removed');
-}

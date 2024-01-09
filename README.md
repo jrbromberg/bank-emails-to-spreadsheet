@@ -33,13 +33,12 @@ _NOTE: My preference was to setup a new Gmail account to host the spreadsheet an
 ### 1. Host Gmail account
 Create a new Gmail account.  Use whatever name you like.  I recommend using your personal email as the backup email.
 
-Create two new labels:
-- `BankTransactionUpdate`
-- `TransactionAdded`
+Create new label: `bankupdate`
 
 Create a filter to label incoming bank alerts.  Use these settings:
 - `From: noreply@becualerts.org`
-- `Apply the label: BankTransactionUpdate`
+- `Do this: Star it`
+- `Apply the label: bankupdate`
 - `Never send it to Spam`
 
 ### 2. Bank alerts
