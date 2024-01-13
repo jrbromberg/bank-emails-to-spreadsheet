@@ -68,7 +68,7 @@ function getResolvedTransactions(transactionsForCheck) {
         JSON.stringify(pendingTransactionCompValues) ===
         JSON.stringify(completedTransactionCompValues)
       ) {
-        addToResolved("Exact match");
+        addToResolved("Exact Match");
         break;
       } else if (
         isEqualSansAmount(
@@ -78,7 +78,7 @@ function getResolvedTransactions(transactionsForCheck) {
         isOlderThanThreeDays(pendingTransaction) &&
         isApproxMatch(pendingTransaction, completedTransaction)
       ) {
-        addToResolved("Approximate match");
+        addToResolved("Approximate Match");
         break;
       }
       function addToResolved(matchType) {
@@ -172,12 +172,12 @@ function getCompletedMatchWithNote(
     hour12: true,
   };
   const formattedDatetime = dateTime.toLocaleString("en-US", dateTimeFormat);
+  const description = pendingTransaction.values[4];
   completedTransaction.values[5] = [
     matchType,
-    "for",
     amount,
     formattedDatetime,
-    "pending transaction resolved",
+    description,
   ].join(" ");
   return completedTransaction;
 }

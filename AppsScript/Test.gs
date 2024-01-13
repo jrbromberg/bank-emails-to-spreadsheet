@@ -28,6 +28,8 @@ function prepMessagesFromTestData() {
     getTestMessageContentForResolvePendingFromConcurrent(),
     getTestMessageContentForLowBalanceAlert(),
     getTestMessageContentForUnknownEndContent(),
+    getTestMessageContentForResolvePendingFromApproximateMatch(),
+    getTestMessageContentForAlmostApproximateMatch(),
   ];
   const receivedTime = new Date();
   preppedMessages.forEach((thisMessage, index) => {
@@ -45,7 +47,7 @@ function getTestMessageContentForSingleExpenseAllTestAmounts() {
   });
   sections = sections.replace(
     TEST_DATA.DESCRIPTION_REGEX,
-    "(One expense, all amounts)"
+    "(One Expense, All Amounts)"
   );
   return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
 }
@@ -66,7 +68,7 @@ function getTestMessageContentForAllTransactionTypes() {
   let sections = "".concat(sectionOne, sectionTwo, sectionThree);
   sections = sections.replace(
     TEST_DATA.DESCRIPTION_REGEX,
-    "(All transaction types)"
+    "(All Transaction Types)"
   );
   return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
 }
@@ -116,7 +118,7 @@ function getTestMessageContentForResolvePendingFromConcurrent() {
   let sections = "".concat(sectionOne, sectionTwo);
   sections = sections.replace(
     TEST_DATA.DESCRIPTION_REGEX,
-    "(Resolve concurrent pending)"
+    "(Resolve Concurrent Pending)"
   );
   return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
 }
@@ -139,9 +141,33 @@ function getTestMessageContentForUnknownEndContent() {
   );
   sectionOne = sectionOne.replace(
     TEST_DATA.DESCRIPTION_REGEX,
-    "(Unknown end content)"
+    "(Unknown End Content)"
   );
   return "".concat(sectionOne, newAdditionContent);
+}
+
+function getTestMessageContentForResolvePendingFromApproximateMatch() {
+  let section = replaceSectionValues(
+    TEST_DATA.AMOUNTS.PENDING_APPROX_MATCH,
+    TEST_DATA.TYPE.EXPENSE
+  );
+  section = section.replace(
+    TEST_DATA.DESCRIPTION_REGEX,
+    "(Approximate Match)"
+  );
+  return "".concat(section, TEST_DATA.SECTIONS.END_CONTENT);
+}
+
+function getTestMessageContentForAlmostApproximateMatch() {
+  let section = replaceSectionValues(
+    TEST_DATA.AMOUNTS.PENDING_ALMOST_APPROX_MATCH,
+    TEST_DATA.TYPE.EXPENSE
+  );
+  section = section.replace(
+    TEST_DATA.DESCRIPTION_REGEX,
+    "(Almost Approximate Match)"
+  );
+  return "".concat(section, TEST_DATA.SECTIONS.END_CONTENT);
 }
 
 function replaceSectionValues(amount, type) {

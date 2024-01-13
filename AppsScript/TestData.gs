@@ -21,6 +21,8 @@ function setTestData() {
       PENDING_TWO: "1,000.00",
       PENDING_THREE: "1,500.00",
       PENDING_FOUR: "2,000.00",
+      PENDING_APPROX_MATCH: "2,505.00",
+      PENDING_ALMOST_APPROX_MATCH: "3,033.00",
     },
     TYPE: {
       EXPENSE: {
@@ -39,37 +41,65 @@ function setTestData() {
     DESCRIPTION_REGEX: /\(Description\)/g,
     SHEET_START_VALUES: {
       ROWS: [
-        [starterEntryDatetime, "1234", "Deposit", "10,000.00", "Starter entry"],
+        [starterEntryDatetime, "1234", "Deposit", "10,000.00", "Starter Entry"],
         [
           starterEntryDatetime,
           "1234",
           "Pending Expense",
           "-500.00",
-          "Test pending exp.",
+          "Test Pending Exp.",
         ],
         [
           starterEntryDatetime,
           "1234",
           "Pending Expense",
           "-1,000.00",
-          "Test pending exp.",
+          "Test Pending Exp.",
         ],
         [
           starterEntryDatetime,
           "1234",
           "Pending Expense",
           "-1,500.00",
-          "Test pending exp.",
+          "Test Pending Exp.",
+        ],
+        [
+          starterEntryDatetime,
+          "1234",
+          "Expense",
+          "-5,555.55",
+          "Space Filler",
         ],
         [
           starterEntryDatetime,
           "1234",
           "Pending Expense",
           "-2,000.00",
-          "Test pending exp.",
+          "Test Pending Exp.",
+        ],
+        [
+          starterEntryDatetime,
+          "1234",
+          "Expense",
+          "-5,555.55",
+          "Space Filler",
+        ],
+        [
+          starterEntryDatetime,
+          "1234",
+          "Pending Expense",
+          "-2,500.00",
+          "Approximate Match",
+        ],
+        [
+          starterEntryDatetime,
+          "1234",
+          "Pending Expense",
+          "-3,000.00",
+          "Almost Approximate Match",
         ],
       ],
-      PENDING_DESCRIPTION: "(Test pending exp.)",
+      PENDING_DESCRIPTION: "(Test Pending Exp.)",
     },
   };
   Object.freeze(TEST_DATA);
