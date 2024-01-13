@@ -17,9 +17,7 @@ This is made to work with BECU but could be modified to work with any bank that 
 Script
 - Pulls transaction type, account, description, amount, and email received datetime into Transactions tab for each transaction
 - Checks new transactions against pending transactions to keep balances correct
-- Updates email labels after processing
-- Has automated testing
-- Has basic error handling with email alerts
+- Includees automated testing, basic error handling, and email alerts
 
 Spreadsheet
 - Sums transaction information by account in the Balances tab.
@@ -69,8 +67,9 @@ Go to Google Apps Script at https://script.google.com/home.  Make sure you are i
 Create a new project. Name it whatever you like.
 
 Create four script files with the below names. Replace the content of each file with the content from the files in the AppsScript folder in this repo.
-- `App.gs`
 - `Config.gs`
+- `Main.gs`
+- `Pending.gs`
 - `Test.gs`
 - `TestData.gs`
 
@@ -81,12 +80,14 @@ Update the code at the top of the `Config.gs` file. Enter your spreadsheet IDs a
 Save and deploy.  You will need to allow access and should be prompted to do so.
 
 For automated testing with built-in test data:<br>
-Run the `runAllTests` function from the `Test.gs` file. I spot check the test by making sure the transactions sheet was filled up, there is only one pending transaction left in the transaction sheet, and there is only the one intended error (Unexpected content in email) in the log.
+Run the `runAllTests` function from the `Test.gs` file. I spot check the test by making sure the transactions sheet was filled up, there are only two pending transactions left in the transaction sheet, and there is only the one intended error (Unexpected content in email) in the log.
 
 For production testing:<br>
-Make sure you have some bank alert emails in your host Gmail labeled `BankTransactionUpdate`. Run the `checkForNewAlerts` function from the `App.gs` file. Check the log, spreadsheet, and updated email labels to ensure everything is working correctly.
+Make sure you have some bank alert emails in your host Gmail labeled `bankupdate`. Run the `checkForNewAlerts` function from the `Main.gs` file. Check the log, spreadsheet, and updated email labels to ensure everything is working correctly.
 
 Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
+
+Add a timed trigger for `runRoutinePendingReview`.  I went with every Sunday.
 
 Enjoy and let me know if I missed anything.
 
