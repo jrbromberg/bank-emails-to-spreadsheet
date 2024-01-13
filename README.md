@@ -87,7 +87,7 @@ Make sure you have some bank alert emails in your host Gmail labeled `bankupdate
 
 Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
 
-Add a timed trigger for `runWeeklyPendingReview`.  I went with every week.
+Add a timed trigger for `runRoutinePendingReview`.  I went with every Sunday.
 
 Enjoy and let me know if I missed anything.
 

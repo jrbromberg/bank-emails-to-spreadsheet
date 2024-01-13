@@ -1,4 +1,4 @@
-function runPostUpdatePendingCheck() {
+function runPostUpdatePendingReview() {
   const transactionsForCheck = getTransactionsForPendingCheck();
   if (transactionsForCheck) {
     const resolvedTransactions = getResolvedTransactions(transactionsForCheck);
@@ -197,24 +197,32 @@ function updateResolvedTransactions(resolvedTransactions) {
   }
 }
 
-function runWeeklyPendingReview() {
-  runPostUpdatePendingCheck();
-  let transactionsOlderThanFiveDays = [
-    "The following pending transactions are over 7 days old:",
-  ];
+function runRoutinePendingReview() {
+  setGlobalValues("production");
+  runPostUpdatePendingReview();
+  let transactionsOlderThanFiveDays = [];
   const pendingTransactions = getTransactionsForPendingCheck().pending;
   for (const pendingTransaction of pendingTransactions) {
     if (isOlderThanFiveDays(pendingTransaction)) {
-      emailTransaction = pendingTransaction.slice(0, 5).join(", ");
+      emailTransaction = pendingTransaction.values.slice(0, 5).join(",\n");
       transactionsOlderThanFiveDays.push(emailTransaction);
     }
   }
-  const emailBody = transactionsOlderThanFiveDays.join("\n");
-  MailApp.sendEmail({
-    to: CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
-    subject: "Pending reviews over 7 days old",
-    body: emailBody,
-  });
+  if (transactionsOlderThanFiveDays.length > 0) {
+    transactionsOlderThanFiveDays.unshift(
+      "The following pending transactions are over 5 days old:"
+    );
+    const emailBody = transactionsOlderThanFiveDays.join("\n\n");
+    MailApp.sendEmail({
+      to: CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
+      subject: "Pending transactions over 5 days old",
+      body: emailBody,
+    });
+    Logger.log(emailBody);
+    Logger.log("Email sent");
+  } else {
+    Logger.log("No pending transactions over 5 days old were found");
+  }
 }
 
 function isOlderThanFiveDays(pendingTransaction) {

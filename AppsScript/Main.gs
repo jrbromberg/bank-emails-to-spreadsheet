@@ -52,7 +52,7 @@ function processMessages(preppedMessages) {
       );
     });
     Logger.log("Transactions added to sheet");
-    runPostUpdatePendingCheck();
+    runPostUpdatePendingReview();
     updateStars();
   } catch (error) {
     addError(error, "Error occursed while processing the email alerts");
