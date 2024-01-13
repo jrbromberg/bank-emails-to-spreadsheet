@@ -16,7 +16,7 @@ This is made to work with BECU but could be modified to work with any bank that 
 
 Script
 - Pulls transaction type, account, description, amount, and email received datetime into Transactions tab for each transaction
-- Checks new transactions against pending transactions to keep balances correct
+- Checks new transactions against pending transactions to keep balances accurate
 - Includees automated testing, basic error handling, and email alerts
 
 Spreadsheet
