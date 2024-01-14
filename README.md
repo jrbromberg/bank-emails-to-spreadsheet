@@ -66,7 +66,7 @@ Go to Google Apps Script at https://script.google.com/home.  Make sure you are i
 
 Create a new project. Name it whatever you like.
 
-Create four script files with the below names. Replace the content of each file with the content from the files in the AppsScript folder in this repo.
+Create script files with the below names. Replace the content of each file with the content from the files in the AppsScript folder in this repo.
 - `Config.gs`
 - `Main.gs`
 - `Pending.gs`
