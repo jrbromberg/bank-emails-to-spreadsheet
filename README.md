@@ -8,9 +8,9 @@ This is made to work with BECU but could be modified to work with any bank that 
 
 # Included
 
-- Code for Google Apps Script
-- A simple starter spreadsheet to upload to Google Sheets
-- Basic setup instructions for whole process
+- Google Apps Script
+- Simple starter spreadsheet
+- Setup instructions
 
 # Features
 
