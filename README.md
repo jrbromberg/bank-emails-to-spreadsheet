@@ -1,30 +1,17 @@
 # What is this?
 
-This is a free and safe solution for pulling bank account transactions into a google spreadsheet that you can customize.
-
-No bank login information required.  This works by scraping emails.
-
-This is made to work with BECU but could be modified to work with any bank that can send email alerts for all transactions.
+This is a free and safe solution for pulling bank account transactions into a google spreadsheet that you can customize. No bank login information required.   This works by scraping emails.  This is made to work with BECU but could be modified to work with any bank that can send email alerts for all transactions.
 
 # Included
 
 - Google Apps Script
+  - Pulls transaction type, account, description, amount, and email received datetime into Transactions tab for each transaction
+  - Checks new transactions against pending transactions to keep balances accurate
+  - Automated testing, basic error handling, and email alerts
 - Simple starter spreadsheet
-- Setup instructions
-
-# Features
-
-Script
-- Pulls transaction type, account, description, amount, and email received datetime into Transactions tab for each transaction
-- Checks new transactions against pending transactions to keep balances accurate
-- Includees automated testing, basic error handling, and email alerts
-
-Spreadsheet
-- Sums transaction information by account in the Balances tab.
-
+  - Sums transaction information by account in the Balances tab
 
 # Setup
-
 
 _NOTE: My preference was to setup a new Gmail account to host the spreadsheet and script. This felt safer and more organized to me. However, I don't know of any specific safety issues related to using only a single personal Gmail account. Modify setup as needed to use one Gmail account that receives bank alerts directly from the bank and hosts the spreadsheet and script._
 
