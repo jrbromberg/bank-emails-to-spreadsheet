@@ -14,7 +14,7 @@ function getTransactionsForPendingCheck() {
   rowsForCheck &&
     rowsForCheck.forEach((rowValues, index) => {
       let rowNumber = index + 2;
-      if (GLOBAL_CONST.REGEX.PENDING.test(rowValues[2])) {
+      if (TRANSACTION_NAMES.PENDING_EXPENSE.includes(rowValues[2])) {
         transactionsForCheck.pending.push(
           getTransactionValues(rowNumber, rowValues)
         );
@@ -35,7 +35,7 @@ function getRowsOldestPendingAndUp() {
     .getValues();
   let lastPendingRow = -1;
   typeColumnValues.forEach((type, index) => {
-    GLOBAL_CONST.REGEX.PENDING.test(type[0]) && (lastPendingRow = index + 2);
+    TRANSACTION_NAMES.PENDING_EXPENSE.includes(type[0]) && (lastPendingRow = index + 2);
   });
   return lastPendingRow !== -1
     ? sheet.getRange(2, 1, lastPendingRow - 1, 6).getValues()
@@ -44,13 +44,14 @@ function getRowsOldestPendingAndUp() {
 
 function getTransactionValues(rowNumber, rowValues) {
   let dateTime = new Date(rowValues[0]);
-  let accountNum = rowValues[1].toString();
-  let transType = rowValues[2];
-  let dollarAmount = rowValues[3].toFixed(2);
-  let transDescription = rowValues[4];
+  let bank = rowValues[1].toString();
+  let accountNum = rowValues[2].toString();
+  let transType = rowValues[3];
+  let dollarAmount = rowValues[4].toFixed(2);
+  let transDescription = rowValues[5];
   return {
     row: rowNumber,
-    values: [dateTime, accountNum, transType, dollarAmount, transDescription],
+    values: [dateTime, bank, accountNum, transType, dollarAmount, transDescription],
   };
 }
 
@@ -108,15 +109,15 @@ function getResolvedTransactions(transactionsForCheck) {
 
 function getCompValues(transactionForComp) {
   let valuesForComp = [...transactionForComp.values];
-  valuesForComp[2] = valuesForComp[2].replace("Pending ", "");
-  return valuesForComp.slice(1, 5);
+  valuesForComp[3] = valuesForComp[3].replace("Pending ", "");
+  return valuesForComp.slice(1, 6);
 }
 
 function isEqualSansAmount(pendingValues, completedValues) {
-  pendingValues = pendingValues.slice(0, 2).concat(pendingValues.slice(3));
+  pendingValues = pendingValues.slice(0, 3).concat(pendingValues.slice(4));
   completedValues = completedValues
-    .slice(0, 2)
-    .concat(completedValues.slice(3));
+    .slice(0, 3)
+    .concat(completedValues.slice(4));
   return JSON.stringify(pendingValues) === JSON.stringify(completedValues);
 }
 
@@ -128,11 +129,11 @@ function isOlderThanThreeDays(pendingTransaction) {
 
 function isApproxMatch(pendingTransaction, completedTransaction) {
   const permittedPercentDifference = getPermittedPercentDifference(
-    pendingTransaction.values[3]
+    pendingTransaction.values[4]
   );
   const actualPercentDifference = getPercentDifference(
-    pendingTransaction.values[3],
-    completedTransaction.values[3]
+    pendingTransaction.values[4],
+    completedTransaction.values[4]
   );
   return actualPercentDifference < permittedPercentDifference;
 }
@@ -161,7 +162,7 @@ function getCompletedMatchWithNote(
   completedTransaction,
   matchType
 ) {
-  const amount = pendingTransaction.values[3];
+  const amount = pendingTransaction.values[4];
   const dateTime = pendingTransaction.values[0];
   const dateTimeFormat = {
     month: "numeric",
@@ -172,8 +173,8 @@ function getCompletedMatchWithNote(
     hour12: true,
   };
   const formattedDatetime = dateTime.toLocaleString("en-US", dateTimeFormat);
-  const description = pendingTransaction.values[4];
-  completedTransaction.values[5] = [
+  const description = pendingTransaction.values[5];
+  completedTransaction.values[6] = [
     matchType,
     amount,
     formattedDatetime,
@@ -186,9 +187,9 @@ function updateResolvedTransactions(resolvedTransactions) {
   // make updates before delations
   // make deletions from bottom up
   for (const completedTransaction of resolvedTransactions.completed) {
-    noteCellRange = "F" + completedTransaction.row;
+    noteCellRange = "G" + completedTransaction.row;
     GLOBAL_CONST.TRANSACTIONS_SHEET.getRange(noteCellRange).setValue(
-      completedTransaction.values[5]
+      completedTransaction.values[6]
     );
   }
   resolvedTransactions.pending.sort((a, b) => b.row - a.row);
@@ -204,7 +205,7 @@ function runRoutinePendingReview() {
   const pendingTransactions = getTransactionsForPendingCheck().pending;
   for (const pendingTransaction of pendingTransactions) {
     if (isOlderThanFiveDays(pendingTransaction)) {
-      emailTransaction = pendingTransaction.values.slice(0, 5).join(",\n");
+      emailTransaction = pendingTransaction.values.slice(0, 6).join(",\n");
       transactionsOlderThanFiveDays.push(emailTransaction);
     }
   }

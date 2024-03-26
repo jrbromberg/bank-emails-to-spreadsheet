@@ -90,17 +90,7 @@ function setGlobalValues(setting) {
 function setDefaultGlobalValues() {
   GLOBAL_CONST.SEARCH = "label:bankupdate is:starred";
   GLOBAL_CONST.STARRED_MESSAGES = getStarredMessages();
-  GLOBAL_CONST.REGEX = {
-    ACCOUNT_NUM: /\d{4} \*/,
-    TRANS_TYPE:
-      /(Large Pending Expense|Large Pending Deposit|Large Expense|Large Deposit)/,
-    NON_TRANS_TYPE: /(Low Account Balance)/,
-    PENDING: /Pending/,
-    AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-    EXPENSE: /Expense/,
-    DESCRIPTION: /\(.*\)/,
-    OTHER_CONTENT: /12770 Gateway Drive/,
-  };
+  setBankData();
 }
 
 function getStarredMessages() {

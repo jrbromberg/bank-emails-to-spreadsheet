@@ -5,6 +5,7 @@ function setBankData() {
     DEPOSIT: "Deposit",
     PENDING_EXPENSE: "Pending Expense",
     PENDING_DEPOSIT: "Pending Deposit",
+    PAYMENT: "Payment",
     BALANCE: "Balance",
   };
   Object.freeze(TRANSACTION_NAMES);
@@ -18,11 +19,23 @@ function setBankData() {
     ACCOUNT_NUM: /(?<=ending\sin\s)\d{4}/,
     TRANS_TYPE: {
       EXPENSE: /Credit card transaction exceeds/,
+      PAYMENT: /Payment:/,
     },
-    NON_TRANS_TYPE: /(Did you know)/,
+    NON_UPDATE: [/(Did you know)/, /Your statement is available/],
     AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-    DESCRIPTION: /(?<=Where:)\s*.*\s(?=View\sdetails)/,
+    DESCRIPTION: /(?<=Where:).*(?=[\r\n]+)/,
     OTHER_CONTENT: /12770 Gateway Drive/,
+    BALANCE: {
+      IS_TYPE: /Balance:/,
+      ACCOUNT_NUM: /\d{4}(?=[\r\n]+Date:)/,
+      DESCRIPTION: /(?<=Account:).*(?=-)/,
+      AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
+    },
+    PAYMENT: {
+      ACCOUNT_NUM: /\d{4}(?=[\r\n]+Date posted:)/,
+      DESCRIPTION: /(?<=To:).*(?=ending in)/,
+      AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
+    },
   };
   BANKS.BOFA.SECTION_DELIMITER = getSectionDelimiter(BANKS.BOFA.DESCRIPTION);
 
@@ -37,7 +50,7 @@ function setBankData() {
       DEPOSIT: /Large Deposit/,
       PENDING_EXPENSE: /Large Pending Expense/,
     },
-    NON_TRANS_TYPE: /(Low Account Balance)/,
+    NON_UPDATE: [/(Low Account Balance)/],
     AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
     DESCRIPTION: /(?<=\().*(?=\))/,
     OTHER_CONTENT: /12770 Gateway Drive/,
@@ -55,7 +68,7 @@ function setBankData() {
       DEPOSIT: /Large Deposit/,
       PENDING_EXPENSE: /Large Pending Expense/,
     },
-    NON_TRANS_TYPE: /(Low Account Balance)/,
+    NON_UPDATE: [/(Low Account Balance)/],
     AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
     DESCRIPTION: /(?<=\().*(?=\))/,
     OTHER_CONTENT: /12770 Gateway Drive/,
