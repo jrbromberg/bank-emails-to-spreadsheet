@@ -89,11 +89,12 @@ function setGlobalValues(setting) {
 
 function setDefaultGlobalValues() {
   GLOBAL_CONST.SEARCH = "label:bankupdate is:starred";
-  GLOBAL_CONST.STARRED_MESSAGES = getStarredMessages();
-  setBankData();
+  setStarredMessages();
+  setBanks();
+  setUpdateTypes();
 }
 
-function getStarredMessages() {
+function setStarredMessages() {
   let starredMessages = [];
   const matchingThreads = GmailApp.search(GLOBAL_CONST.SEARCH);
   const threadMessageArrays = GmailApp.getMessagesForThreads(matchingThreads);
@@ -103,7 +104,7 @@ function getStarredMessages() {
       starredMessages.push(thisMessage);
     }
   });
-  return starredMessages;
+  GLOBAL_CONST.STARRED_MESSAGES = starredMessages;
 }
 
 function setProductionGlobalValues() {

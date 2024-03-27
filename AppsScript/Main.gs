@@ -66,12 +66,10 @@ function getUpdatesFromAllMessages(preppedMessages) {
   preppedMessages.forEach((thisMessage) => {
     let messageContent = thisMessage.content;
     let bank = getBankData(thisMessage);
-    let messageType = getMessageType(messageContent, bank);
     let receivedTime = thisMessage.time;
-    Logger.log(messageType + " message:");
+    Logger.log("Message:");
     Logger.log(messageContent);
     let messageUpdateValues = getUpdatesFromThisMessage(
-      messageType,
       messageContent,
       receivedTime,
       bank
@@ -85,180 +83,92 @@ function getUpdatesFromAllMessages(preppedMessages) {
 }
 
 function getBankData(message) {
-  for (const [bank, bankValues] of Object.entries(BANKS)) {
-    if (bankValues.SENDER === message.from) {
-      return bankValues;
-    }
-  }
-  addError(new Error("Bank update email sender address not recognized"));
-}
-
-function getMessageType(messageContent, bank) {
-  if (bank.BALANCE && messageContent.match(bank.BALANCE.IS_TYPE)) {
-    return "Balance";
-  } else if (
-    bank.TRANS_TYPE &&
-    findMatchingTransactionType(messageContent, bank)
-  ) {
-    return "Transaction";
-  } else if (bank.NON_UPDATE.some((regex) => regex.test(messageContent))) {
-    return "Other Alert";
-  }
-  addError(new Error("Message type not recognized"));
-}
-
-function findMatchingTransactionType(content, bank) {
-  return Object.entries(bank.TRANS_TYPE).find(([typeKey, regex]) =>
-    regex.test(content)
+  const bankValues = Object.values(BANKS).find((bank) =>
+    bank.SENDERS.includes(message.from)
   );
+  return bankValues
+    ? bankValues
+    : addError(new Error("Email sender address not recognized"));
 }
 
-function getUpdatesFromThisMessage(
-  messageType,
-  messageContent,
-  receivedTime,
-  bank
-) {
+function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
   let allValuesFromAllUpdatesInThisMessage = [];
   try {
-    if (messageType === "Transaction") {
-      let transactionUpdateValues = getTransactionUpdateValues(
-        messageContent,
-        receivedTime,
-        bank
+    messageFormat = getMessageFormat(messageContent, bank);
+    let messageSections = [messageContent];
+    if (messageFormat.DELIMITER) {
+      messageSections = messageContent.split(
+        getSectionDelimiter(messageFormat.DELIMITER)
       );
-      if (transactionUpdateValues) {
-        allValuesFromAllUpdatesInThisMessage.push(...transactionUpdateValues);
-      } else {
-        addError(new Error("Transaction values not found"));
-      }
-    } else if (messageType === "Balance") {
-      let balanceUpdateValues = getBalanceUpdateValues(
-        messageContent,
-        receivedTime,
-        bank
-      );
-      if (balanceUpdateValues) {
-        allValuesFromAllUpdatesInThisMessage.push(balanceUpdateValues);
-      } else {
-        addError(new Error("Balance values not found"));
-      }
     }
+    messageSections.forEach((thisSection) => {
+      let updateValuesFromSection = getUpdateValuesFromSection(
+        thisSection,
+        messageFormat,
+        receivedTime,
+        bank
+      );
+      if (updateValuesFromSection) {
+        allValuesFromAllUpdatesInThisMessage.push(updateValuesFromSection);
+      } else if (!messageFormat.EXTRA_CONTENT?.test(thisSection)) {
+        addError(new Error("Unrecognized transaction section"));
+      }
+    });
   } catch (error) {
     addError(error, "Error occured while getting update values");
   }
   return allValuesFromAllUpdatesInThisMessage;
 }
 
-function getTransactionUpdateValues(messageContent, receivedTime, bank) {
-  let allTransactionUpdateValuesFromThisMessage = [];
-  let messageTransType = getTransactionTypeName(messageContent, bank);
-  if (messageTransType === "Payment") {
-    let transactionUpdateValues = getPaymentTransactionUpdateValues(
-      messageContent,
-      receivedTime,
-      bank
-    );
-    if (transactionUpdateValues) {
-      allTransactionUpdateValuesFromThisMessage.push(transactionUpdateValues);
-    } else {
-      addError(new Error("Payment values not found"));
-    }
-  } else {
-    let messageSections = messageContent.split(bank.SECTION_DELIMITER);
-    messageSections.forEach((thisSection) => {
-      let transactionUpdateValues = getStandardTransactionUpdateValues(
-        thisSection,
-        receivedTime,
-        bank
-      );
-      if (transactionUpdateValues) {
-        allTransactionUpdateValuesFromThisMessage.push(transactionUpdateValues);
-      } else if (!bank.OTHER_CONTENT?.test(thisSection)) {
-        addError(new Error("Unrecognized transaction section"));
-      }
-    });
-  }
-  return allTransactionUpdateValuesFromThisMessage;
+function getMessageFormat(messageContent, bank) {
+  return Object.values(bank.UPDATES).find((messageFormat) =>
+    Object.values(messageFormat.HAS_TYPE).some((updateType) =>
+      messageContent.match(updateType)
+    )
+  );
 }
 
-function getTransactionTypeName(section, bank) {
-  const matchingTransType = findMatchingTransactionType(section, bank);
-  if (matchingTransType) {
-    const [typeKey, regex] = matchingTransType;
-    const matchingName = Object.entries(TRANSACTION_NAMES).find(
-      ([nameKey]) => nameKey === typeKey
-    );
-    return matchingName ? matchingName[1] : null;
+function getUpdateValuesFromSection(
+  section,
+  messageFormat,
+  receivedTime,
+  bank
+) {
+  let updateType = getUpdateTypeName(section, messageFormat);
+  if (updateType) {
+    let accountNum = section.match(messageFormat.ACCOUNT_NUM)[0];
+    let updateDescription = section.match(messageFormat.DESCRIPTION)[0].trim();
+    let dollarAmount = section
+      .match(messageFormat.AMOUNT)[0]
+      .replace("$", "")
+      .trim();
+    if (
+      [UPDATE_TYPES.EXPENSE, UPDATE_TYPES.PENDING_EXPENSE].includes(updateType)
+    ) {
+      dollarAmount = `-${dollarAmount}`;
+    }
+    return [
+      receivedTime,
+      bank.NAME.SHORT,
+      accountNum,
+      updateType,
+      dollarAmount,
+      updateDescription,
+    ];
   }
   return null;
 }
 
-function getPaymentTransactionUpdateValues(messageSection, receivedTime, bank) {
-  let accountNum = messageSection.match(bank.PAYMENT.ACCOUNT_NUM)[0];
-  let dollarAmount = messageSection
-    .match(bank.PAYMENT.AMOUNT)[0]
-    .replace("$", "")
-    .trim();
-  let transDescription = messageSection
-    .match(bank.PAYMENT.DESCRIPTION)[0]
-    .trim();
-  return [
-    receivedTime,
-    bank.SHORT_NAME,
-    accountNum,
-    "Payment",
-    dollarAmount,
-    transDescription,
-  ];
-}
-
-function getStandardTransactionUpdateValues(
-  messageSection,
-  receivedTime,
-  bank
-) {
-  let transType = getTransactionTypeName(messageSection, bank);
-  let accountNum = messageSection.match(bank.ACCOUNT_NUM)[0];
-  let dollarAmount = messageSection
-    .match(bank.AMOUNT)[0]
-    .replace("$", "")
-    .trim();
-  if (
-    [TRANSACTION_NAMES.EXPENSE, TRANSACTION_NAMES.PENDING_EXPENSE].includes(
-      transType
-    )
-  ) {
-    dollarAmount = "-" + dollarAmount;
-  }
-  let transDescription = messageSection.match(bank.DESCRIPTION)[0].trim();
-  return [
-    receivedTime,
-    bank.SHORT_NAME,
-    accountNum,
-    transType,
-    dollarAmount,
-    transDescription,
-  ];
-}
-
-function getBalanceUpdateValues(messageSection, receivedTime, bank) {
-  let balance = messageSection
-    .match(bank.BALANCE.AMOUNT)[0]
-    .replace("$", "")
-    .trim();
-  let accountNum = messageSection.match(bank.BALANCE.ACCOUNT_NUM)[0];
-  let updateType = "Balance";
-  let description = messageSection.match(bank.BALANCE.DESCRIPTION)[0].trim();
-  if (balance && accountNum && description) {
-    return [
-      receivedTime,
-      bank.SHORT_NAME,
-      accountNum,
-      updateType,
-      balance,
-      description,
-    ];
+function getUpdateTypeName(section, messageFormat) {
+  const matchingUpdateType = Object.entries(messageFormat.HAS_TYPE).find(
+    ([_, regex]) => regex.test(section)
+  );
+  if (matchingUpdateType) {
+    const [typeKey, _] = matchingUpdateType;
+    const matchingName = Object.entries(UPDATE_TYPES).find(
+      ([nameKey]) => nameKey === typeKey
+    );
+    return matchingName ? matchingName[1] : null;
   }
   return null;
 }

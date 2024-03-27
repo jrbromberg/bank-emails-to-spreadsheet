@@ -14,7 +14,7 @@ function getTransactionsForPendingCheck() {
   rowsForCheck &&
     rowsForCheck.forEach((rowValues, index) => {
       let rowNumber = index + 2;
-      if (TRANSACTION_NAMES.PENDING_EXPENSE.includes(rowValues[2])) {
+      if (UPDATE_TYPES.PENDING_EXPENSE.includes(rowValues[2])) {
         transactionsForCheck.pending.push(
           getTransactionValues(rowNumber, rowValues)
         );
@@ -35,7 +35,7 @@ function getRowsOldestPendingAndUp() {
     .getValues();
   let lastPendingRow = -1;
   typeColumnValues.forEach((type, index) => {
-    TRANSACTION_NAMES.PENDING_EXPENSE.includes(type[0]) && (lastPendingRow = index + 2);
+    UPDATE_TYPES.PENDING_EXPENSE.includes(type[0]) && (lastPendingRow = index + 2);
   });
   return lastPendingRow !== -1
     ? sheet.getRange(2, 1, lastPendingRow - 1, 6).getValues()
