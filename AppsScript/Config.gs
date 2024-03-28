@@ -1,22 +1,4 @@
-function setConfig() {
-  CONFIG = {
-    PRODUCTION: {
-      SPREADSHEET_ID: "PUT GOOGLE SPREADSHEET ID HERE",
-      ERROR_ALERT_EMAIL_ADDRESS: "PUT EMAIL FOR ERROR ALERTS HERE",
-    },
-    TEST: {
-      SPREADSHEET_ID: "PUT TEST GOOGLE SPREADSHEET ID HERE",
-      ERROR_ALERT_EMAIL_ADDRESS: "PUT EMAIL FOR TEST ERROR ALERTS HERE",
-    },
-  };
-  Object.freeze(CONFIG);
-}
-
-// enter your spreadsheet and email address info into the above CONFIG object
-// if using with BECU, no other changes are needed
-// setup your email, spreadsheet, and bank account alerts per the readme
-
-setConfig();
+setSettings();
 initGlobalVarAndErrorHandling();
 
 function initGlobalVarAndErrorHandling() {
@@ -56,8 +38,8 @@ function sendErrorAlertEmail() {
     bodyValue = GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join("\n");
   } else {
     toValue = [
-      CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
-      CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS,
+      SETTINGS.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
+      SETTINGS.TEST.ERROR_ALERT_EMAIL_ADDRESS,
     ].join(",");
     subjectValue = "Bank Email Scraper Alert";
     bodyValue = "The script failed early on";
@@ -88,7 +70,6 @@ function setGlobalValues(setting) {
 }
 
 function setDefaultGlobalValues() {
-  GLOBAL_CONST.SEARCH = "label:bankupdate is:starred";
   setStarredMessages();
   setBanks();
   setUpdateTypes();
@@ -96,7 +77,9 @@ function setDefaultGlobalValues() {
 
 function setStarredMessages() {
   let starredMessages = [];
-  const matchingThreads = GmailApp.search(GLOBAL_CONST.SEARCH);
+  const matchingThreads = GmailApp.search(
+    "label:" + SETTINGS.ALERT_MESSAGE_GMAIL_LABEL + " is:starred"
+  );
   const threadMessageArrays = GmailApp.getMessagesForThreads(matchingThreads);
   const allMessages = [].concat(...threadMessageArrays);
   allMessages.forEach((thisMessage) => {
@@ -109,21 +92,21 @@ function setStarredMessages() {
 
 function setProductionGlobalValues() {
   GLOBAL_CONST.TRANSACTIONS_SHEET = getTransactionsSheet(
-    CONFIG.PRODUCTION.SPREADSHEET_ID
+    SETTINGS.PRODUCTION.SPREADSHEET_ID
   );
   GLOBAL_CONST.MESSAGE_SOURCE = "email";
   GLOBAL_CONST.ERROR_ALERT_EMAIL_ADDRESS =
-    CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS;
+    SETTINGS.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS;
   GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT = "Financial Dashboard Error";
 }
 
 function setTestGlobalValues() {
   GLOBAL_CONST.TRANSACTIONS_SHEET = getTransactionsSheet(
-    CONFIG.TEST.SPREADSHEET_ID
+    SETTINGS.TEST.SPREADSHEET_ID
   );
   GLOBAL_CONST.MESSAGE_SOURCE = "test-data";
   GLOBAL_CONST.ERROR_ALERT_EMAIL_ADDRESS =
-    CONFIG.TEST.ERROR_ALERT_EMAIL_ADDRESS;
+    SETTINGS.TEST.ERROR_ALERT_EMAIL_ADDRESS;
   GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT = "Test run";
   GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push(
     "Financial Dashboard script was run in test mode"
@@ -131,5 +114,7 @@ function setTestGlobalValues() {
 }
 
 function getTransactionsSheet(spreadsheetID) {
-  return SpreadsheetApp.openById(spreadsheetID).getSheetByName("Transactions");
+  return SpreadsheetApp.openById(spreadsheetID).getSheetByName(
+    SETTINGS.TRANSACTIONS_SHEET_NAME
+  );
 }

@@ -10,7 +10,7 @@ function runAllTests() {
 }
 
 function resetTestSheet() {
-  const testSheet = getTransactionsSheet(CONFIG.TEST.SPREADSHEET_ID);
+  const testSheet = getTransactionsSheet(SETTINGS.TEST.SPREADSHEET_ID);
   testSheet
     .getRange(2, 1, testSheet.getLastRow() - 1, testSheet.getLastColumn())
     .clearContent();

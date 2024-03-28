@@ -215,7 +215,7 @@ function runRoutinePendingReview() {
     );
     const emailBody = transactionsOlderThanFiveDays.join("\n\n");
     MailApp.sendEmail({
-      to: CONFIG.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
+      to: SETTINGS.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
       subject: "Pending transactions over 5 days old",
       body: emailBody,
     });
