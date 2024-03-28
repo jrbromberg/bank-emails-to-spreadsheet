@@ -1,3 +1,6 @@
+// ACCOUNT_NUM, AMOUNT, AND DESCRIPTION will be used in smartMatch function
+//   smartMatch will return first regex subgroup in match if subgroup exists
+//   otherwise it will return entire match
 function setBanks() {
   BANKS = {};
   BANKS.BECU = {
@@ -5,7 +8,10 @@ function setBanks() {
       LONG: "BECU",
       SHORT: "BECU",
     },
-    SENDERS: ["noreply@becualerts.org"],
+    SENDERS: {
+      DIRECT: ["noreply@becualerts.org"],
+      FORWARDED: ["From: BECU Notifications <noreply@becualerts.org>"],
+    },
     UPDATES: {
       TRANSACTION_FORMAT: {
         HAS_TYPE: {
@@ -16,8 +22,8 @@ function setBanks() {
         ACCOUNT_NUM: /\d{4}(?=\s\*)/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
         DESCRIPTION: /(?<=\().*(?=\))/,
-        DELIMITER: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-        EXTRA_CONTENT: /12770 Gateway Drive/,
+        DELIMITER: /(?=Log In To Account)/g,
+        EXTRA_SECTION: /12770 Gateway Drive/,
       },
     },
     NON_UPDATES: [/(Low Account Balance)/],
@@ -27,7 +33,12 @@ function setBanks() {
       LONG: "Bank of America",
       SHORT: "BofA",
     },
-    SENDERS: ["onlinebanking@ealerts.bankofamerica.com"],
+    SENDERS: {
+      DIRECT: ["onlinebanking@ealerts.bankofamerica.com"],
+      FORWARDED: [
+        "From: Bank of America <onlinebanking@ealerts.bankofamerica.com>",
+      ],
+    },
     UPDATES: {
       TRANSACTION_FORMAT: {
         HAS_TYPE: {
@@ -35,9 +46,9 @@ function setBanks() {
         },
         ACCOUNT_NUM: /(?<=ending\sin\s)\d{4}/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-        DESCRIPTION: /(?<=Where:).*(?=[\r\n]+)/,
-        DELIMITER: /(?<=Where:).*(?=[\r\n]+)/,
-        EXTRA_CONTENT: /12770 Gateway Drive/,
+        DESCRIPTION: /(?<=Where:)[\s\r\n]*(\S.*)/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
       },
       PAYMENT_FORMAT: {
         HAS_TYPE: {
@@ -47,17 +58,17 @@ function setBanks() {
         AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
         DESCRIPTION: /(?<=To:).*(?=ending in)/,
         DELIMITER: null,
-        EXTRA_CONTENT: null,
+        EXTRA_SECTION: null,
       },
       BALANCE_FORMAT: {
         HAS_TYPE: {
           BALANCE: /Balance:/,
         },
-        ACCOUNT_NUM: /\d{4}(?=[\r\n]+Date:)/,
-        AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
+        ACCOUNT_NUM: /(\d{4})\D*(?=[\r\n]+Date:)/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
         DESCRIPTION: /(?<=Account:).*(?=-)/,
         DELIMITER: null,
-        EXTRA_CONTENT: null,
+        EXTRA_SECTION: null,
       },
     },
     NON_UPDATES: [/(Did you know)/, /Your statement is available/],
@@ -74,8 +85,4 @@ function setUpdateTypes() {
     BALANCE: "Balance",
   };
   Object.freeze(UPDATE_TYPES);
-}
-
-function getSectionDelimiter(delimiterRegex) {
-  new RegExp(`(?<=${delimiterRegex.source})`, "g");
 }

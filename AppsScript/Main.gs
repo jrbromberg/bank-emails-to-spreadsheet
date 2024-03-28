@@ -65,7 +65,7 @@ function getUpdatesFromAllMessages(preppedMessages) {
   let allUpdateValues = [];
   preppedMessages.forEach((thisMessage) => {
     let messageContent = thisMessage.content;
-    let bank = getBankData(thisMessage);
+    let bank = getBankData(messageContent, thisMessage.from);
     let receivedTime = thisMessage.time;
     Logger.log("Message:");
     Logger.log(messageContent);
@@ -82,25 +82,26 @@ function getUpdatesFromAllMessages(preppedMessages) {
   return allUpdateValues;
 }
 
-function getBankData(message) {
-  const bankValues = Object.values(BANKS).find((bank) =>
-    bank.SENDERS.includes(message.from)
-  );
+function getBankData(messageContent, sender) {
+  let bankValues =
+    Object.values(BANKS).find((bank) => bank.SENDERS.DIRECT.includes(sender)) ||
+    Object.values(BANKS).find((bank) =>
+      bank.SENDERS.FORWARDED.some((forwarded) =>
+        messageContent.includes(forwarded)
+      )
+    );
   return bankValues
     ? bankValues
-    : addError(new Error("Email sender address not recognized"));
+    : addError(new Error("Email alert origin not recognized"));
 }
 
 function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
   let allValuesFromAllUpdatesInThisMessage = [];
   try {
     messageFormat = getMessageFormat(messageContent, bank);
-    let messageSections = [messageContent];
-    if (messageFormat.DELIMITER) {
-      messageSections = messageContent.split(
-        getSectionDelimiter(messageFormat.DELIMITER)
-      );
-    }
+    let messageSections = messageFormat.DELIMITER
+      ? messageContent.split(messageFormat.DELIMITER)
+      : [messageContent];
     messageSections.forEach((thisSection) => {
       let updateValuesFromSection = getUpdateValuesFromSection(
         thisSection,
@@ -110,7 +111,7 @@ function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
       );
       if (updateValuesFromSection) {
         allValuesFromAllUpdatesInThisMessage.push(updateValuesFromSection);
-      } else if (!messageFormat.EXTRA_CONTENT?.test(thisSection)) {
+      } else if (!messageFormat.EXTRA_SECTION?.test(thisSection)) {
         addError(new Error("Unrecognized transaction section"));
       }
     });
@@ -136,12 +137,9 @@ function getUpdateValuesFromSection(
 ) {
   let updateType = getUpdateTypeName(section, messageFormat);
   if (updateType) {
-    let accountNum = section.match(messageFormat.ACCOUNT_NUM)[0];
-    let updateDescription = section.match(messageFormat.DESCRIPTION)[0].trim();
-    let dollarAmount = section
-      .match(messageFormat.AMOUNT)[0]
-      .replace("$", "")
-      .trim();
+    let accountNum = smartMatch(section, messageFormat.ACCOUNT_NUM);
+    let updateDescription = smartMatch(section, messageFormat.DESCRIPTION);
+    let dollarAmount = smartMatch(section, messageFormat.AMOUNT);
     if (
       [UPDATE_TYPES.EXPENSE, UPDATE_TYPES.PENDING_EXPENSE].includes(updateType)
     ) {
@@ -157,6 +155,20 @@ function getUpdateValuesFromSection(
     ];
   }
   return null;
+}
+
+function smartMatch(stringToSearch, regex) {
+  let simpleMatch = stringToSearch.match(regex);
+  if (!simpleMatch) {
+    addError(new Error("Failed to match regex " + regex));
+  }
+  let matchToReturn = simpleMatch
+    ? simpleMatch[simpleMatch.length > 1 ? 1 : 0]
+    : undefined;
+  matchToReturn =
+    typeof matchToReturn === "string" ? matchToReturn.trim() : matchToReturn;
+  if (matchToReturn) return matchToReturn;
+  addError(new Error("smartMatch failed \nsimpleMatch: " + simpleMatch));
 }
 
 function getUpdateTypeName(section, messageFormat) {
