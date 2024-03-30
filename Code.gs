@@ -1,5 +1,6 @@
 // Sections:
 // > Bank Regex
+// > Buttons
 // > Config
 // > Main
 // > Pending Transactions
@@ -102,6 +103,48 @@ function setUpdateTypes() {
 }
 
 // ************************************************************************
+// BUTTONS CODE
+// ************************************************************************
+
+function buttonRunTheApp() {
+  BASIC_CONFIG.TRANS_SHEET.activate();
+  checkForNewAlerts("production");
+}
+
+function buttonSetTimedTriggers() {
+  try {
+    ScriptApp.newTrigger("checkForNewAlerts")
+      .timeBased()
+      .everyMinutes(5)
+      .create();
+    ScriptApp.newTrigger("runRoutinePendingReview")
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+      .atHour(8)
+      .inTimezone(Session.getScriptTimeZone())
+      .create();
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue(new Date());
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue("");
+  } catch (error) {
+    addError(error, "Failed to set timed triggers");
+  }
+}
+
+function buttonDeleteTimedTriggers() {
+  try {
+    ScriptApp.getProjectTriggers().forEach((trigger) => {
+      if (trigger.getEventType() === ScriptApp.EventType.CLOCK) {
+        ScriptApp.deleteTrigger(trigger);
+      }
+    });
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue("");
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue(new Date());
+  } catch (error) {
+    addError(error, "Failed to delete timed triggers");
+  }
+}
+
+// ************************************************************************
 // CONFIG CODE
 // ************************************************************************
 
@@ -118,6 +161,7 @@ function setBasicConfig() {
   const defaultErrorAlertEmail = Session.getEffectiveUser().getEmail();
   let spreadsheet,
     settingsSheet,
+    transSheet,
     errorAlertEmailOverride,
     alertMessageGmailLabelOverride;
   try {
@@ -135,9 +179,11 @@ function setBasicConfig() {
   } catch (error) {
     addError(error, "Failed to get Basic Config values");
   }
+  transSheet = spreadsheet?.getSheetByName("Transactions");
   BASIC_CONFIG = {
     SPREADSHEET: spreadsheet,
     SETTINGS_SHEET: settingsSheet,
+    TRANS_SHEET: transSheet,
     ERROR_ALERT_EMAIL_ADDRESS:
       errorAlertEmailOverride ||
       spreadsheet?.getOwner().getEmail() ||
@@ -207,8 +253,6 @@ function setGlobalValues(setting) {
 }
 
 function setDefaultGlobalValues() {
-  GLOBAL_CONST.TRANS_SHEET =
-    BASIC_CONFIG.SPREADSHEET.getSheetByName("Transactions");
   setStarredMessages();
   setBanks();
   setUpdateTypes();
@@ -258,6 +302,9 @@ function checkForNewAlerts(setting) {
     } else {
       Logger.log("No new alerts");
     }
+    const lastRunCell =
+      setting === "production" ? "B6" : setting === "test" ? "B7" : null;
+    BASIC_CONFIG.SETTINGS_SHEET.getRange(lastRunCell)?.setValue(new Date());
   } catch (error) {
     addError(error, "The script was not able to run");
   }
@@ -299,7 +346,7 @@ function processMessages(preppedMessages) {
     // so that rows pending deletion aren't re-ordered (got bottom to top)
     // seems this happen by accident but want to ensure it
     updateValues.forEach((thisUpdate) => {
-      writeToTransactionsSheet(thisUpdate, GLOBAL_CONST.TRANS_SHEET);
+      writeToTransactionsSheet(thisUpdate, BASIC_CONFIG.TRANS_SHEET);
     });
     Logger.log("Updates added to sheet");
     runPostUpdatePendingReview();
@@ -486,7 +533,7 @@ function getTransactionsForPendingCheck() {
 }
 
 function getRowsOldestPendingAndUp() {
-  const sheet = GLOBAL_CONST.TRANS_SHEET;
+  const sheet = BASIC_CONFIG.TRANS_SHEET;
   const typeColumnValues = sheet
     .getRange("D2:C" + sheet.getLastRow())
     .getValues();
@@ -653,13 +700,13 @@ function updateResolvedTransactions(resolvedTransactions) {
   // make deletions from bottom up
   for (const completedTransaction of resolvedTransactions.completed) {
     noteCellRange = "G" + completedTransaction.row;
-    GLOBAL_CONST.TRANS_SHEET.getRange(noteCellRange).setValue(
+    BASIC_CONFIG.TRANS_SHEET.getRange(noteCellRange).setValue(
       completedTransaction.values[6]
     );
   }
   resolvedTransactions.pending.sort((a, b) => b.row - a.row);
   for (const pendingTransaction of resolvedTransactions.pending) {
-    GLOBAL_CONST.TRANS_SHEET.deleteRow(pendingTransaction.row);
+    BASIC_CONFIG.TRANS_SHEET.deleteRow(pendingTransaction.row);
   }
 }
 
