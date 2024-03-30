@@ -463,12 +463,20 @@ function getTransactionsForPendingCheck() {
   rowsForCheck &&
     rowsForCheck.forEach((rowValues, index) => {
       let rowNumber = index + 2;
-      if (UPDATE_TYPES.PENDING_EXPENSE.includes(rowValues[2])) {
+      if (
+        [UPDATE_TYPES.PENDING_EXPENSE, UPDATE_TYPES.PENDING_DEPOSIT].includes(
+          rowValues[2]
+        )
+      ) {
         transactionsForCheck.pending.push(
           getTransactionValues(rowNumber, rowValues)
         );
-      } else if (!rowValues[5]) {
-        // make sure this isn't a balance later
+      } else if (
+        !rowValues[6] &&
+        !UPDATE_TYPES.BALANCE.includes(rowValues[2])
+      ) {
+        // depends on no note being present for completed transactions
+        // that have not already been used for a pending transaction
         transactionsForCheck.completed.push(
           getTransactionValues(rowNumber, rowValues)
         );
@@ -480,7 +488,7 @@ function getTransactionsForPendingCheck() {
 function getRowsOldestPendingAndUp() {
   const sheet = GLOBAL_CONST.TRANS_SHEET;
   const typeColumnValues = sheet
-    .getRange("C2:C" + sheet.getLastRow())
+    .getRange("D2:C" + sheet.getLastRow())
     .getValues();
   let lastPendingRow = -1;
   typeColumnValues.forEach((type, index) => {
@@ -488,7 +496,7 @@ function getRowsOldestPendingAndUp() {
       (lastPendingRow = index + 2);
   });
   return lastPendingRow !== -1
-    ? sheet.getRange(2, 1, lastPendingRow - 1, 6).getValues()
+    ? sheet.getRange(2, 1, lastPendingRow - 1, 7).getValues()
     : null;
 }
 
@@ -571,10 +579,10 @@ function getCompValues(transactionForComp) {
 }
 
 function isEqualSansAmount(pendingValues, completedValues) {
-  pendingValues = pendingValues.slice(0, 3).concat(pendingValues.slice(4));
+  pendingValues = pendingValues.slice(0, 4).concat(pendingValues.slice(5));
   completedValues = completedValues
-    .slice(0, 3)
-    .concat(completedValues.slice(4));
+    .slice(0, 4)
+    .concat(completedValues.slice(5));
   return JSON.stringify(pendingValues) === JSON.stringify(completedValues);
 }
 
@@ -672,7 +680,7 @@ function runRoutinePendingReview() {
     );
     const emailBody = transactionsOlderThanFiveDays.join("\n\n");
     MailApp.sendEmail({
-      to: SETTINGS.PRODUCTION.ERROR_ALERT_EMAIL_ADDRESS,
+      to: BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS,
       subject: "Pending transactions over 5 days old",
       body: emailBody,
     });
