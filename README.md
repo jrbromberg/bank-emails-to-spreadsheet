@@ -19,9 +19,9 @@ The script is setup to work with the below banks. To modify the script to work w
 _NOTE: The setup is simplified by making a copy of the spreadsheet linked in the instructions. If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
 
 ### 1. Email setup
-If your bank emails are sent to a Gmail account, you may use that account. You may also forward the bank emails to a new Gmail account. In the Gmail account that will host the spreadsheet:
+If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that will host the spreadsheet:
 
-Create a filter to label incoming bank alerts using the below settings.  If you are forwarding the bank alert emails, include your email in the sender emails.
+Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, include your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
@@ -30,7 +30,7 @@ Create a filter to label incoming bank alerts using the below settings.  If you 
 In the Gmail account that will host the spreadsheet, create the label `bankupdate`
 
 ### 2. Bank alerts
-Setup bank alerts to send you an email for all transactions and balance updates if available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
+Setup bank alerts to send you an email for all transactions, and balance updates if available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
 
 ### 3. Spreadsheet
 This is the spreadsheet (and script) that you will be copying:  
