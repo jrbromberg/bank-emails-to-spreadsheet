@@ -1,4 +1,4 @@
-# What is this?
+# Summary
 
 This is a free and safe solution for pulling bank account transactions into a google spreadsheet. Bank login information is not required. This works by scraping emails.
 
