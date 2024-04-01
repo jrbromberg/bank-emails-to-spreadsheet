@@ -7,6 +7,18 @@
 // > Test
 // > Test Data
 
+function updateSheetWithLock() {
+  var lock = LockService.getDocumentLock();
+  if (lock.tryLock(8000)) {
+    try {
+    } finally {
+      lock.releaseLock();
+    }
+  } else {
+    Logger.log("Could not acquire the lock to update the sheet.");
+  }
+}
+
 // ************************************************************************
 // BANK REGEX CODE
 // ************************************************************************
@@ -71,7 +83,7 @@ function setBanks() {
         },
         ACCOUNT_NUM: /\d{4}(?=[\r\n]+Date posted:)/,
         AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
-        DESCRIPTION: /(?<=To:).*(?=ending in)/,
+        DESCRIPTION: /\.\d{2}[\s\S]*To:([\s\S]*?)ending in/,
         DELIMITER: null,
         EXTRA_SECTION: null,
       },
@@ -81,7 +93,7 @@ function setBanks() {
         },
         ACCOUNT_NUM: /(\d{4})\D*(?=[\r\n]+Date:)/,
         AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
-        DESCRIPTION: /(?<=Account:).*(?=-)/,
+        DESCRIPTION: /Account:([\s\S]*?)-/,
         DELIMITER: null,
         EXTRA_SECTION: null,
       },
@@ -112,40 +124,44 @@ function buttonRunTheApp() {
 }
 
 function buttonSetTimedTriggers() {
-  try {
-    ScriptApp.newTrigger("checkForNewAlerts")
-      .timeBased()
-      .everyMinutes(5)
-      .create();
-    ScriptApp.newTrigger("runRoutinePendingReview")
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
-      .atHour(8)
-      .inTimezone(Session.getScriptTimeZone())
-      .create();
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue(
-      BASIC_CONFIG.LOCAL_RUNTIME
-    );
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue("");
-  } catch (error) {
-    addError(error, "Failed to set timed triggers");
-  }
+  lockDocumentDuring(() => {
+    try {
+      ScriptApp.newTrigger("checkForNewAlerts")
+        .timeBased()
+        .everyMinutes(5)
+        .create();
+      ScriptApp.newTrigger("runRoutinePendingReview")
+        .timeBased()
+        .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+        .atHour(8)
+        .inTimezone(Session.getScriptTimeZone())
+        .create();
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue(
+        BASIC_CONFIG.LOCAL_RUNTIME
+      );
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue("");
+    } catch (error) {
+      addError(error, "Failed to set timed triggers");
+    }
+  });
 }
 
 function buttonDeleteTimedTriggers() {
-  try {
-    ScriptApp.getProjectTriggers().forEach((trigger) => {
-      if (trigger.getEventType() === ScriptApp.EventType.CLOCK) {
-        ScriptApp.deleteTrigger(trigger);
-      }
-    });
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue("");
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue(
-      BASIC_CONFIG.LOCAL_RUNTIME
-    );
-  } catch (error) {
-    addError(error, "Failed to delete timed triggers");
-  }
+  lockDocumentDuring(() => {
+    try {
+      ScriptApp.getProjectTriggers().forEach((trigger) => {
+        if (trigger.getEventType() === ScriptApp.EventType.CLOCK) {
+          ScriptApp.deleteTrigger(trigger);
+        }
+      });
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue("");
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue(
+        BASIC_CONFIG.LOCAL_RUNTIME
+      );
+    } catch (error) {
+      addError(error, "Failed to delete timed triggers");
+    }
+  });
 }
 
 // ************************************************************************
@@ -292,33 +308,52 @@ function setTestGlobalValues() {
   );
 }
 
+function lockDocumentDuring(functionToExecute) {
+  let lock = LockService.getDocumentLock();
+  try {
+    if (lock.tryLock(8000)) {
+      try {
+        functionToExecute();
+      } finally {
+        lock.releaseLock();
+      }
+    } else {
+      addError(new Error("Could not acquire the lock."));
+    }
+  } catch (error) {
+    addError(error, "Error occured with document lock");
+  }
+}
+
 // ************************************************************************
 // MAIN CODE
 // ************************************************************************
 
 function checkForNewAlerts(setting) {
-  try {
-    setting = typeof setting !== "string" ? "production" : setting;
-    setGlobalValues(setting);
-    const preppedMessages = getPreppedMessages();
-    const newAlertsCount = preppedMessages.length;
-    if (newAlertsCount > 0) {
-      Logger.log(newAlertsCount + " new alert messages found");
-      processMessages(preppedMessages);
-    } else {
-      Logger.log("No new alerts");
+  lockDocumentDuring(() => {
+    try {
+      setting = typeof setting !== "string" ? "production" : setting;
+      setGlobalValues(setting);
+      const preppedMessages = getPreppedMessages();
+      const newAlertsCount = preppedMessages.length;
+      if (newAlertsCount > 0) {
+        Logger.log(newAlertsCount + " new alert messages found");
+        processMessages(preppedMessages);
+      } else {
+        Logger.log("No new alerts");
+      }
+      const lastRunCell =
+        setting === "production" ? "B6" : setting === "test" ? "B7" : null;
+      BASIC_CONFIG.SETTINGS_SHEET.getRange(lastRunCell)?.setValue(
+        BASIC_CONFIG.LOCAL_RUNTIME
+      );
+    } catch (error) {
+      addError(error, "The script was not able to run");
     }
-    const lastRunCell =
-      setting === "production" ? "B6" : setting === "test" ? "B7" : null;
-    BASIC_CONFIG.SETTINGS_SHEET.getRange(lastRunCell)?.setValue(
-      BASIC_CONFIG.LOCAL_RUNTIME
-    );
-  } catch (error) {
-    addError(error, "The script was not able to run");
-  }
-  if (GLOBAL_VAR.ERROR_OCCURRED) {
-    sendErrorAlertEmail();
-  }
+    if (GLOBAL_VAR.ERROR_OCCURRED) {
+      sendErrorAlertEmail();
+    }
+  });
 }
 
 function getPreppedMessages() {
@@ -719,31 +754,33 @@ function updateResolvedTransactions(resolvedTransactions) {
 }
 
 function runRoutinePendingReview() {
-  setGlobalValues("production");
-  runPostUpdatePendingReview();
-  let transactionsOlderThanFiveDays = [];
-  const pendingTransactions = getTransactionsForPendingCheck().pending;
-  for (const pendingTransaction of pendingTransactions) {
-    if (isOlderThanFiveDays(pendingTransaction)) {
-      emailTransaction = pendingTransaction.values.slice(0, 6).join(",\n");
-      transactionsOlderThanFiveDays.push(emailTransaction);
+  lockDocumentDuring(() => {
+    setGlobalValues("production");
+    runPostUpdatePendingReview();
+    let transactionsOlderThanFiveDays = [];
+    const pendingTransactions = getTransactionsForPendingCheck().pending;
+    for (const pendingTransaction of pendingTransactions) {
+      if (isOlderThanFiveDays(pendingTransaction)) {
+        emailTransaction = pendingTransaction.values.slice(0, 6).join(",\n");
+        transactionsOlderThanFiveDays.push(emailTransaction);
+      }
     }
-  }
-  if (transactionsOlderThanFiveDays.length > 0) {
-    transactionsOlderThanFiveDays.unshift(
-      "The following pending transactions are over 5 days old:"
-    );
-    const emailBody = transactionsOlderThanFiveDays.join("\n\n");
-    MailApp.sendEmail({
-      to: BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS,
-      subject: "Pending transactions over 5 days old",
-      body: emailBody,
-    });
-    Logger.log(emailBody);
-    Logger.log("Email sent");
-  } else {
-    Logger.log("No pending transactions over 5 days old were found");
-  }
+    if (transactionsOlderThanFiveDays.length > 0) {
+      transactionsOlderThanFiveDays.unshift(
+        "The following pending transactions are over 5 days old:"
+      );
+      const emailBody = transactionsOlderThanFiveDays.join("\n\n");
+      MailApp.sendEmail({
+        to: BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS,
+        subject: "Pending transactions over 5 days old",
+        body: emailBody,
+      });
+      Logger.log(emailBody);
+      Logger.log("Email sent");
+    } else {
+      Logger.log("No pending transactions over 5 days old were found");
+    }
+  });
 }
 
 function isOlderThanFiveDays(pendingTransaction) {

@@ -1,80 +1,50 @@
 # What is this?
 
-This is a free and safe solution for pulling bank account transactions into a google spreadsheet that you can customize. No bank login information required.   This works by scraping emails.  This is made to work with BECU but could be modified to work with any bank that can send email alerts for all transactions.
+This is a free and safe solution for pulling bank account transactions into a google spreadsheet. Bank login information is not required, this works by scraping emails.
 
-# Included
+The script is setup to work with the below banks.  To modify the script to work with additional banks, you should only need to update the BANKS object.
+- Bank of America
+- BECU
 
-- Google Apps Script
-  - Pulls transaction type, account, description, amount, and email received datetime into Transactions tab for each transaction
-  - Checks new transactions against pending transactions to keep balances accurate
-  - Automated testing, basic error handling, and email alerts
-- Simple starter spreadsheet
-  - Sums transaction information by account in the Balances tab
+# Features
+
+- Email received datetime, bank, account, update type, amount, and description pulled into Transactions tab for each update
+- Balances summed by account in balances tab
+- New transactions checked against pending transactions to keep balances accurate
+- Emailed error alerts
+- Testing suite
 
 # Setup
 
-_NOTE: My preference was to setup a new Gmail account to host the spreadsheet and script. This felt safer and more organized to me. However, I don't know of any specific safety issues related to using only a single personal Gmail account. Modify setup as needed to use one Gmail account that receives bank alerts directly from the bank and hosts the spreadsheet and script._
+_NOTE: The setup is simplified by making a copy of the spreadsheet linked below.  If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
 
-### 1. Host Gmail account
-Create a new Gmail account.  Use whatever name you like.  I recommend using your personal email as the backup email.
+### 1. Email setup
+If your bank emails are sent to a Gmail account, you may use that account.  You may also forward the emails to a new Gmail account. In the Gmail account that will host the spreadsheet:
 
-Create new label: `bankupdate`
-
-Create a filter to label incoming bank alerts.  Use these settings:
-- `From: noreply@becualerts.org`
+Create a filter to label incoming bank alerts.  Use these settings.  If forwarding the emails, including your email in the sender emails.
+- `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
 - `Never send it to Spam`
 
+In the Gmail account that will host the spreadsheet, create the label `bankupdate`
+
 ### 2. Bank alerts
-Setup bank alerts to consider anything over zero dollars as a large transaction.  Have bank alerts sent to your personal email.
+Setup bank alerts to send you an email for all transactions and balance updates if available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
 
-### 3. Personal email
-Setup rule to redirect transaction bank alert emails from your personal email to your new host Gmail account.  Make sure the bank's email address appears as the "from email" in the redirected emails received by the host Gmail.  The method to accomplish this will vary based on your personal email provider.
+### 3. Spreadsheet
+You will make a copy of this spreadsheet, the copy will include the script:
+[add the spreadsheet link here]
 
-If personal email provider is Outlook:
-1. Setup a Rule to REDIRECT emails from the bank's notification email address.
+You can make a copy from the file menu or you may click this link:
+[add the spreadsheet link here]
 
-If personal email provider is Gmail:
-1. Add your host Gmail as a forwarding address in the "Forwarding and POP/IMAP" section of settings.  DO NOT proceed to "Forward a copy of incoming mail" in this section. Doing so would forward all emails.
-2. Create a filter to forward the incoming bank alerts.  The "Forward it to" option will have been un-greyed by the first step.
-- `Forward it to: replace.with.your.host.gmail@gmail.com`
-- `Never send it to Spam`
+### 4. Testing and deployment
 
-### 4. Spreadsheet
-In your new host Gmail account, create a new spreadsheet by importing the `bank_email_scraper_starter_spreadsheet.ods` file found in this repo.  You may name the spreadsheet whatever you like.  Do not change the name of the "Transactions" tab/sheet.
+In the settings tab, click the `Run test values` button.  Ensure that the test results match the expected results by checking the far right column.
 
-You can share the spreadsheet with a personal Gmail account as view only.  This makes it easy to view without any worry of accidental edits.
+Once you have some bank alert emails successfully starred and labeled, click the `Run the app` button to ensure updates are being pulled in.
 
-If you would like to use the automated testing, duplicate the spreadsheet and name it as you like for testing.
-
-### 5. Google Apps Script
-Go to Google Apps Script at https://script.google.com/home.  Make sure you are in the host Gmail account.
-
-Create a new project. Name it whatever you like.
-
-Create script files with the below names. Replace the content of each file with the content from the files in the AppsScript folder in this repo.
-- `Config.gs`
-- `Main.gs`
-- `Pending.gs`
-- `Test.gs`
-- `TestData.gs`
-
-Update the code at the top of the `Config.gs` file. Enter your spreadsheet IDs and error email addresses. Google spreadsheet IDs can be found in their URL. I like to have production alert emails sent to my personal email and test alert emails sent to the host email.
-
-### 6. Testing and deployment
-
-Save and deploy.  You will need to allow access and should be prompted to do so.
-
-For automated testing with built-in test data:<br>
-Run the `runAllTests` function from the `Test.gs` file. I spot check the test by making sure the transactions sheet was filled up, there are only two pending transactions left in the transaction sheet, and there is only the one intended error (Unexpected content in email) in the log.
-
-For production testing:<br>
-Make sure you have some bank alert emails in your host Gmail labeled `bankupdate`. Run the `checkForNewAlerts` function from the `Main.gs` file. Check the log, spreadsheet, and updated email labels to ensure everything is working correctly.
-
-Add a timed trigger for `checkForNewAlerts`.  I went with every five minutes.
-
-Add a timed trigger for `runRoutinePendingReview`.  I went with every Sunday.
+Finally, when you are ready to automate the script, click the `Set timed triggers` button.
 
 Enjoy and let me know if I missed anything.
-
