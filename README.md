@@ -19,7 +19,7 @@ The script is setup to work with the below banks. To modify the script to work w
 _NOTE: The setup is simplified by making a copy of the spreadsheet linked in the instructions. If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
 
 ### 1. Email setup
-If your bank emails are sent to a Gmail account, you may use that account. You may also forward the bank emails to a new Gmail account. In the Gmail account that will host the spreadsheet:
+If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account and use that account. In the Gmail account that will host the spreadsheet:
 
 Create a filter to label incoming bank alerts using the below settings.  If you are forwarding the bank alert emails, include your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
