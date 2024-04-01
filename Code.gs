@@ -123,7 +123,9 @@ function buttonSetTimedTriggers() {
       .atHour(8)
       .inTimezone(Session.getScriptTimeZone())
       .create();
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue(new Date());
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue(
+      BASIC_CONFIG.LOCAL_RUNTIME
+    );
     BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue("");
   } catch (error) {
     addError(error, "Failed to set timed triggers");
@@ -138,7 +140,9 @@ function buttonDeleteTimedTriggers() {
       }
     });
     BASIC_CONFIG.SETTINGS_SHEET.getRange("B8").setValue("");
-    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue(new Date());
+    BASIC_CONFIG.SETTINGS_SHEET.getRange("B9").setValue(
+      BASIC_CONFIG.LOCAL_RUNTIME
+    );
   } catch (error) {
     addError(error, "Failed to delete timed triggers");
   }
@@ -163,7 +167,8 @@ function setBasicConfig() {
     settingsSheet,
     transSheet,
     errorAlertEmailOverride,
-    alertMessageGmailLabelOverride;
+    alertMessageGmailLabelOverride,
+    localDateTime;
   try {
     spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     settingsSheet = spreadsheet.getSheetByName("Settings");
@@ -180,6 +185,11 @@ function setBasicConfig() {
     addError(error, "Failed to get Basic Config values");
   }
   transSheet = spreadsheet?.getSheetByName("Transactions");
+  localDateTime = Utilities.formatDate(
+    new Date(),
+    Session.getScriptTimeZone(),
+    "yyyy-MM-dd HH:mm:ss"
+  );
   BASIC_CONFIG = {
     SPREADSHEET: spreadsheet,
     SETTINGS_SHEET: settingsSheet,
@@ -189,6 +199,7 @@ function setBasicConfig() {
       spreadsheet?.getOwner().getEmail() ||
       defaultErrorAlertEmail,
     ALERT_MESSAGE_GMAIL_LABEL: alertMessageGmailLabelOverride || "bankupdate",
+    LOCAL_RUNTIME: localDateTime,
   };
   Object.freeze(BASIC_CONFIG);
 }
@@ -217,16 +228,11 @@ function addError(error, separateEmailMessage) {
 }
 
 function sendErrorAlertEmail() {
-  let toValue, subjectValue, bodyValue;
-  if (typeof GLOBAL_CONST !== "undefined" && GLOBAL_CONST !== null) {
-    toValue = BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS;
-    subjectValue = GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT;
-    bodyValue = GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join("\n");
-  } else {
-    toValue = BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS;
-    subjectValue = "Bank Email Scraper Alert";
-    bodyValue = "The script failed early on";
-  }
+  let toValue = BASIC_CONFIG.ERROR_ALERT_EMAIL_ADDRESS;
+  let subjectValue =
+    GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT || "Bank Email Scraper Alert";
+  let bodyValue =
+    GLOBAL_VAR.ERROR_EMAIL_MESSAGES.join("\n") || "The script failed early on";
   MailApp.sendEmail({
     to: toValue,
     subject: subjectValue,
@@ -304,7 +310,9 @@ function checkForNewAlerts(setting) {
     }
     const lastRunCell =
       setting === "production" ? "B6" : setting === "test" ? "B7" : null;
-    BASIC_CONFIG.SETTINGS_SHEET.getRange(lastRunCell)?.setValue(new Date());
+    BASIC_CONFIG.SETTINGS_SHEET.getRange(lastRunCell)?.setValue(
+      BASIC_CONFIG.LOCAL_RUNTIME
+    );
   } catch (error) {
     addError(error, "The script was not able to run");
   }
