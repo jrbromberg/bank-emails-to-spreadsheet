@@ -7,18 +7,6 @@
 // > Test
 // > Test Data
 
-function updateSheetWithLock() {
-  var lock = LockService.getDocumentLock();
-  if (lock.tryLock(8000)) {
-    try {
-    } finally {
-      lock.releaseLock();
-    }
-  } else {
-    Logger.log("Could not acquire the lock to update the sheet.");
-  }
-}
-
 // ************************************************************************
 // BANK REGEX CODE
 // ************************************************************************
