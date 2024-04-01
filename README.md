@@ -21,7 +21,7 @@ _NOTE: The setup is simplified by making a copy of the spreadsheet linked in the
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you may use that account. You may also forward the emails to a new Gmail account. In the Gmail account that will host the spreadsheet:
 
-Create a filter to label incoming bank alerts using the settings below.  If you are forwarding the bank alert emails, include your email in the sender emails.
+Create a filter to label incoming bank alerts using the below settings.  If you are forwarding the bank alert emails, include your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
