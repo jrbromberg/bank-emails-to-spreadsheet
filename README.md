@@ -33,7 +33,7 @@ In the Gmail account that will host the spreadsheet, create the label `bankupdat
 Setup bank alerts to send you an email for all transactions and/or balance updates as available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
 
 ### 3. Spreadsheet
-This is the spreadsheet (and script) that you will be copying:  
+This is the spreadsheet (and attached script) that you will be copying:  
 [add the spreadsheet link here]
 
 You can make a copy from the file menu or you can click this link:  
