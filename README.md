@@ -16,7 +16,7 @@ The script is setup to work with the below banks. To modify the script to work w
 
 # Setup
 
-_NOTE: The setup is simplified by making a copy of the spreadsheet linked in the instructions. If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
+_NOTE: The setup is simplified by making a copy of the spreadsheet linked in the instructions below. If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
 
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that will host the spreadsheet:
