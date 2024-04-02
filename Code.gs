@@ -786,6 +786,98 @@ function isOlderThanFiveDays(pendingTransaction) {
 // > use test messages built from the TestData file
 // > send error alerts to the test email
 
+function buttonRunTestValues() {
+  lockDocumentDuring(() => {
+    try {
+      let testRunSheet = getNewTestSheet();
+      testRunSheet.activate();
+      runTestSuite(testRunSheet);
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B7").setValue(
+        BASIC_CONFIG.LOCAL_RUNTIME
+      );
+    } catch (error) {
+      addError(error, "Failed to run test values");
+    }
+  });
+}
+
+function getNewTestSheet() {
+  let testRunSheetName = "Test Run";
+  let testRunSheet = BASIC_CONFIG.SPREADSHEET.getSheetByName(testRunSheetName);
+  if (testRunSheet) {
+    BASIC_CONFIG.SPREADSHEET.deleteSheet(testRunSheet);
+  }
+  testRunSheet = BASIC_CONFIG.SPREADSHEET.insertSheet(testRunSheetName);
+  return testRunSheet;
+}
+
+function runTestSuite(testSheet) {
+  // initial headlines
+  let transHeadlineValues = [
+    [
+      "Email time and date",
+      "Bank",
+      "Account #",
+      "Update Type",
+      "Amount",
+      "Description",
+      "Note",
+    ],
+  ];
+  let transHeadlineRanges = ["A1:G1", "I1:O1"];
+  let transHeadlineColumnWidths = [230, 120, 120, 120, 120, 335, 480];
+  testSheet.setRowHeight(1, 31);
+  transHeadlineRanges.forEach((rangeString) => {
+    let range = testSheet.getRange(rangeString);
+    range.setValues(transHeadlineValues);
+    formatHeadline(range);
+    range.setHorizontalAlignment("right");
+  });
+  transHeadlineColumnWidths.forEach((width, index) => {
+    testSheet.setColumnWidth(index + 1, width);
+    testSheet.setColumnWidth(index + 9, width);
+  });
+  formatHeadline(testSheet.getRange("Q1").setValue("Equal"));
+
+  // run the test
+  // //
+
+  // shorten and add parent headlines
+  testSheet.getRange("A1:O1").setHorizontalAlignment("left");
+  for (var col = 1; col <= 17; col++) {
+    testSheet.setColumnWidth(col, 60);
+  }
+  testSheet.insertRowBefore(1);
+  testSheet.getRange("A1:Q1").setHorizontalAlignment("center");
+  testSheet.getRange("A1:G1").merge().setValue("Test Results");
+  testSheet.getRange("I1:O1").merge().setValue("Expected Results");
+  testSheet.getRange("Q1:Q2").merge();
+
+  // insert expected values
+  // //
+
+  // check equality
+  testSheet
+    .getRange("Q3")
+    .setValue('=join("",A3:G3)=join("",I3:O3)')
+    .autoFill(
+      testSheet.getRange("Q3:Q10"),
+      SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES
+    );
+}
+
+function formatHeadline(range) {
+  range
+    .setVerticalAlignment("middle")
+    .setHorizontalAlignment("center")
+    .setFontWeight("bold")
+    .setBackground("#4c5869")
+    .setVerticalAlignment("middle")
+    .setFontColor("#FFFFFF");
+}
+
+// new stuff above
+
 function runAllTests() {
   setTestData();
   resetTestSheet();
