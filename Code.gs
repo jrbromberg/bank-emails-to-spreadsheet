@@ -55,7 +55,7 @@ function setBanks() {
       ],
     },
     UPDATES: {
-      TRANSACTION_FORMAT: {
+      CC_EXPENSE_FORMAT: {
         HAS_TYPE: {
           EXPENSE: /Credit card transaction exceeds/,
         },
@@ -65,7 +65,17 @@ function setBanks() {
         DELIMITER: null,
         EXTRA_SECTION: null,
       },
-      PAYMENT_FORMAT: {
+      CC_CREDIT_FORMAT: {
+        HAS_TYPE: {
+          DEPOSIT: /We've credited your account/,
+        },
+        ACCOUNT_NUM: /(?<=ending\sin\s)\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
+        DESCRIPTION: /[\n\r](.*?)ending in/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+      CC_PAYMENT_FORMAT: {
         HAS_TYPE: {
           DEPOSIT: /Payment:/,
         },
@@ -448,11 +458,14 @@ function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
 }
 
 function getMessageFormat(messageContent, bank) {
-  return Object.values(bank.UPDATES).find((messageFormat) =>
+  let messageFormat = Object.values(bank.UPDATES).find((messageFormat) =>
     Object.values(messageFormat.HAS_TYPE).some((updateType) =>
       messageContent.match(updateType)
     )
   );
+  return messageFormat
+  ? messageFormat
+  : addError(new Error("Message format not found"));
 }
 
 function getUpdateValuesFromSection(
