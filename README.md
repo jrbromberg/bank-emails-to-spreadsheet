@@ -1,10 +1,11 @@
 # Summary
 
-This is a free and safe solution for pulling bank account transactions into a google spreadsheet. Bank login information is not required. This works by scraping emails.
+This is a free and safe solution for pulling your bank transactions into a google spreadsheet. Bank login information is not required. This works by scraping emails.
 
-The script is setup to work with the below banks. To modify the script to work with additional banks, you should only need to update the BANKS object.
-- Bank of America
-- BECU
+The script is set up to work with the below bank services. To modify the script to work with additional bank services, you should only need to update the BANKS object.
+- Bank of America Checking
+- Bank of America Credit Card
+- BECU Checking
 
 # Features
 
@@ -16,7 +17,7 @@ The script is setup to work with the below banks. To modify the script to work w
 
 # Setup
 
-_NOTE: The setup is simplified by making a copy of the spreadsheet linked in the instructions below. If you prefer, you can also setup the spreadsheet and script manually using the files in this repo._
+_NOTE: These instructions utilize the 'Make a copy' option in Google Sheets to simplify the setup. You can also set up the spreadsheet and script manually by using the files in this repo._
 
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
@@ -30,13 +31,13 @@ Create a filter to label incoming bank alerts using the below settings.  If you 
 In the Gmail account that will host the spreadsheet, create the label `bankupdate`
 
 ### 2. Bank alerts
-Setup bank alerts to send you an email for all transactions and/or balance updates as available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
+Setup your bank alerts to send you an email for all transactions and/or balance updates as available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
 
 ### 3. Spreadsheet
 This is the spreadsheet (and attached script) that you will be copying:  
 [add the spreadsheet link here]
 
-You can make a copy from the file menu or you can click this link:  
+You can `Make a copy` from the file menu or you can click this link:  
 [add the spreadsheet link here]
 
 ### 4. Testing and deployment

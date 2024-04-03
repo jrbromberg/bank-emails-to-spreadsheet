@@ -30,18 +30,43 @@ function setBanks() {
     UPDATES: {
       TRANSACTION_FORMAT: {
         HAS_TYPE: {
-          EXPENSE: /Large Expense/,
-          DEPOSIT: /Large Deposit/,
-          PENDING_EXPENSE: /Large Pending Expense/,
+          EXPENSE: {
+            REGEX: /Large Expense/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
+          DEPOSIT: {
+            REGEX: /Large Deposit/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
+          PENDING_EXPENSE: {
+            REGEX: /Large Pending Expense/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
         },
         ACCOUNT_NUM: /\d{4}(?=\s\*)/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
         DESCRIPTION: /(?<=\().*(?=\))/,
         DELIMITER: /(?=Log In To Account)/g,
-        EXTRA_SECTION: /12770 Gateway Drive/,
+        EXTRA_SECTION: {
+          REGEX: /12770 Gateway Drive/,
+          TEST_SECTIONS: {
+            DIRECT_EMAIL: "ASDF",
+            FORWARDED_EMAIL: "ASDF",
+          },
+        },
       },
     },
     NON_UPDATES: [/(Low Account Balance)/],
+    NON_UPDATES_TEST: "ASDF",
   };
   BANKS.BOFA = {
     NAME: {
@@ -57,7 +82,13 @@ function setBanks() {
     UPDATES: {
       CC_EXPENSE_FORMAT: {
         HAS_TYPE: {
-          EXPENSE: /Credit card transaction exceeds/,
+          EXPENSE: {
+            REGEX: /Credit card transaction exceeds/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
         },
         ACCOUNT_NUM: /(?<=ending\sin\s)\d{4}/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
@@ -67,7 +98,13 @@ function setBanks() {
       },
       CC_CREDIT_FORMAT: {
         HAS_TYPE: {
-          DEPOSIT: /We've credited your account/,
+          DEPOSIT: {
+            REGEX: /We've credited your account/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
         },
         ACCOUNT_NUM: /(?<=ending\sin\s)\d{4}/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
@@ -77,7 +114,13 @@ function setBanks() {
       },
       CC_PAYMENT_FORMAT: {
         HAS_TYPE: {
-          DEPOSIT: /Payment:/,
+          DEPOSIT: {
+            REGEX: /Payment:/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
         },
         ACCOUNT_NUM: /\d{4}(?=[\r\n]+Date posted:)/,
         AMOUNT: /(?!\$0\.00)\$\s*[\d,]*\.\d\d/,
@@ -87,7 +130,13 @@ function setBanks() {
       },
       BALANCE_FORMAT: {
         HAS_TYPE: {
-          BALANCE: /Balance:/,
+          BALANCE: {
+            REGEX: /Balance:/,
+            TEST_SECTIONS: {
+              DIRECT_EMAIL: "ASDF",
+              FORWARDED_EMAIL: "ASDF",
+            },
+          },
         },
         ACCOUNT_NUM: /(\d{4})\D*(?=[\r\n]+Date:)/,
         AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
@@ -460,12 +509,12 @@ function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
 function getMessageFormat(messageContent, bank) {
   let messageFormat = Object.values(bank.UPDATES).find((messageFormat) =>
     Object.values(messageFormat.HAS_TYPE).some((updateType) =>
-      messageContent.match(updateType)
+      messageContent.match(updateType.REGEX)
     )
   );
   return messageFormat
-  ? messageFormat
-  : addError(new Error("Message format not found"));
+    ? messageFormat
+    : addError(new Error("Message format not found"));
 }
 
 function getUpdateValuesFromSection(
@@ -512,7 +561,7 @@ function smartMatch(stringToSearch, regex) {
 
 function getUpdateTypeName(section, messageFormat) {
   const matchingUpdateType = Object.entries(messageFormat.HAS_TYPE).find(
-    ([_, regex]) => regex.test(section)
+    ([_, type]) => type.REGEX.test(section)
   );
   if (matchingUpdateType) {
     const [typeKey, _] = matchingUpdateType;
@@ -825,7 +874,15 @@ function getNewTestSheet() {
 }
 
 function runTestSuite(testSheet) {
-  // initial headlines
+  createTransHeadlines(testSheet);
+  // add starter values
+  // run the test values
+  reconfigureSheetForCompView(testSheet);
+  // insert expected values
+  checkTestEquality(testSheet);
+}
+
+function createTransHeadlines(testSheet) {
   let transHeadlineValues = [
     [
       "Email time and date",
@@ -851,32 +908,6 @@ function runTestSuite(testSheet) {
     testSheet.setColumnWidth(index + 9, width);
   });
   formatHeadline(testSheet.getRange("Q1").setValue("Equal"));
-
-  // run the test
-  // //
-
-  // shorten and add parent headlines
-  testSheet.getRange("A1:O1").setHorizontalAlignment("left");
-  for (var col = 1; col <= 17; col++) {
-    testSheet.setColumnWidth(col, 60);
-  }
-  testSheet.insertRowBefore(1);
-  testSheet.getRange("A1:Q1").setHorizontalAlignment("center");
-  testSheet.getRange("A1:G1").merge().setValue("Test Results");
-  testSheet.getRange("I1:O1").merge().setValue("Expected Results");
-  testSheet.getRange("Q1:Q2").merge();
-
-  // insert expected values
-  // //
-
-  // check equality
-  testSheet
-    .getRange("Q3")
-    .setValue('=join("",A3:G3)=join("",I3:O3)')
-    .autoFill(
-      testSheet.getRange("Q3:Q10"),
-      SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES
-    );
 }
 
 function formatHeadline(range) {
@@ -887,6 +918,28 @@ function formatHeadline(range) {
     .setBackground("#4c5869")
     .setVerticalAlignment("middle")
     .setFontColor("#FFFFFF");
+}
+
+function reconfigureSheetForCompView(testSheet) {
+  testSheet.getRange("A1:O1").setHorizontalAlignment("left");
+  for (var col = 1; col <= 17; col++) {
+    testSheet.setColumnWidth(col, 60);
+  }
+  testSheet.insertRowBefore(1);
+  testSheet.getRange("A1:Q1").setHorizontalAlignment("center");
+  testSheet.getRange("A1:G1").merge().setValue("Test Results");
+  testSheet.getRange("I1:O1").merge().setValue("Expected Results");
+  testSheet.getRange("Q1:Q2").merge();
+}
+
+function checkTestEquality(testSheet) {
+  testSheet
+    .getRange("Q3")
+    .setValue('=join("",A3:G3)=join("",I3:O3)')
+    .autoFill(
+      testSheet.getRange("Q3:Q10"),
+      SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES
+    );
 }
 
 // new stuff above
