@@ -42,8 +42,8 @@ You can `Make a copy` from the file menu or you can [click this link](https://do
 
 In the settings tab, click the `Run test values` button.  After a moment, there will be a popup to authorize the script.  You'll need to go through a series of steps:
 - "Authorization required" - Click `OK`
-- "Google hasn’t verified this app" - Click `Advanced` then click `Go to Untitled project (unsafe)`
 - "Choose an account" - Click your Gmail account
+- "Google hasn’t verified this app" - Click `Advanced` then click `Go to Untitled project (unsafe)`
 - "Sign in to Untitled project" - Click `Continue`
 - "Untitled project wants to access your Google Account" - Click `Allow`
 
