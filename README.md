@@ -17,7 +17,7 @@ The script is set up to work with the below bank products. To modify the script 
 
 # Setup
 
-_NOTE: These instructions utilize the 'Make a copy' option in Google Sheets to simplify the setup. You can also set up the spreadsheet and script manually by using the files in this repo._
+_NOTE: These instructions utilize the 'Make a copy' option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script in this repo._
 
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
