@@ -28,7 +28,7 @@ Create a filter to label incoming bank alerts using the below settings.  If you 
 - `Apply the label: bankupdate`
 - `Never send it to Spam`
 
-In the Gmail account that will host the spreadsheet, create the label `bankupdate`
+In the Gmail account that will host the spreadsheet, create a label named `bankupdate`
 
 ### 2. Bank alerts
 Setup your bank alerts to send you an email for all transactions and/or balance updates as available.  Each bank will be different.  For BECU, I was able to get all transactions over $0.00.  For Bank of America, I was able to get all transactions over $0.01.
