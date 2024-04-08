@@ -40,7 +40,14 @@ You can `Make a copy` from the file menu or you can [click this link](https://do
 
 ### 4. Testing and deployment
 
-In the settings tab, click the `Run test values` button.  Ensure that the test results match the expected results by checking the far right column.
+In the settings tab, click the `Run test values` button.  After a moment, there will be a popup to authorize the script.  You'll need to go through a series of steps:
+- "Authorization required" - Click `OK`
+- "Google hasn’t verified this app" - Click `Advanced` then click `Go to Untitled project (unsafe)`
+- "Choose an account" - Click your Gmail account
+- "Sign in to Untitled project" - Click `Continue`
+- "Untitled project wants to access your Google Account" - Click `Allow`
+
+Now that the script is authorized, click the `Run test values` button again. Ensure that the test results match the expected results by checking the far right column.
 
 Once you have some bank alert emails successfully starred and labeled, click the `Run the app` button to ensure updates are being pulled in.
 
