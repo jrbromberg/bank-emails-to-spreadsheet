@@ -41,11 +41,11 @@ You can `Make a copy` from the file menu or you can [click this link](https://do
 ### 4. Testing and deployment
 
 In the settings tab, click the `Run test values` button.  After a moment, there will be a popup to authorize the script.  You'll need to go through a series of steps:
-- "Authorization required" - Click `OK`
-- "Choose an account" - Click your Gmail account
-- "Google hasn’t verified this app" - Click `Advanced` then click `Go to Untitled project (unsafe)`
-- "Sign in to Untitled project" - Click `Continue`
-- "Untitled project wants to access your Google Account" - Click `Allow`
+- Authorization required: click `OK`
+- Choose an account: click your Gmail account
+- Google hasn’t verified this app: click `Advanced` then click `Go to Untitled project (unsafe)`
+- Sign in to Untitled project: click `Continue`
+- Untitled project wants to access your Google Account: click `Allow`
 
 Now that the script is authorized, click the `Run test values` button again. Ensure that the test results match the expected results by checking the far right column.
 
