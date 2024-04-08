@@ -2,7 +2,7 @@
 
 This is a free and safe solution for pulling your bank transactions into a google spreadsheet. Bank login information is not required. This works by scraping emails.
 
-The script is set up to work with the below bank products. To modify the script to work with additional bank products, you should only need to update the BANKS object.
+The script is set up to work with the below accounts. To modify the script to work with additional accounts, you should only need to update the BANKS object.
 - Bank of America Checking
 - Bank of America Credit Card
 - BECU Checking
