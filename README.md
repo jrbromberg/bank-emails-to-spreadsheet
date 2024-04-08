@@ -35,10 +35,11 @@ Setup your bank alerts to send you an email for all transactions and/or balance 
 
 ### 3. Spreadsheet
 This is the spreadsheet (and attached script) that you will be copying:  
-[add the spreadsheet link here]
+[\[add the spreadsheet link here\]](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo/edit?usp=sharing)
 
-You can `Make a copy` from the file menu or you can click this link:  
-[add the spreadsheet link here]
+[This is the spreadsheet.](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo)
+
+You can `Make a copy` from the file menu or you can [click this link](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo/copy).
 
 ### 4. Testing and deployment
 

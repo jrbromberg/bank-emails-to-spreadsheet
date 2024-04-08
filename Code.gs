@@ -7,9 +7,9 @@
 // > Test
 // > Test Data
 
-// ************************************************************************
+// *****************************************************************************************************************************
 // BANK REGEX CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
 // Regarding bank regex:
 // ACCOUNT_NUM, AMOUNT, AND DESCRIPTION will be used in smartMatch function
@@ -32,23 +32,234 @@ function setBanks() {
         HAS_TYPE: {
           EXPENSE: {
             REGEX: /Large Expense/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              // prettier-ignore
+              DIRECT_EMAIL: `[BECU]
+[Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * Account Name account.
+
+(<description>)
+
+$<amount>
+
+Log In To Account<https://mandrillapp.com/...>
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+
+Learn More<https://mandrillapp.com/...> [https://analytics.moneydesktop.com/...]
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+
+From: BECU Notifications <noreply@becualerts.org>
+Date: Tuesday, February 13, 2024 at 7:02 AM
+To: Your Name <youremail@domain.com>
+Subject: You have incurred 3 large expenses.
+[Image removed by sender. BECU]
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * My Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+Learn More<https://mandrillapp.com/...> [Image removed by sender.]
+
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
             },
           },
           DEPOSIT: {
             REGEX: /Large Deposit/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              // prettier-ignore
+              DIRECT_EMAIL: `[BECU]
+[Large Account Deposit]
+
+Large Deposit
+
+An amount larger than $0.00 was deposited into your 1111 * Account Name account on 3.2.2024.
+
+(<description>)
+
+$<amount>
+
+Log In To Account<https://mandrillapp.com/...>
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+
+Learn More<https://mandrillapp.com/...> [https://analytics.moneydesktop.com/...]
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+
+From: BECU Notifications <noreply@becualerts.org>
+Date: Thursday, March 21, 2024 at 8:00 AM
+To: Your Name <youremail@domain.com>
+Subject: You have received 1 large account deposit.
+[Image removed by sender. BECU]
+
+[Image removed by sender. Large Account Deposit]
+
+Large Deposit
+
+An amount larger than $0.00 was deposited into your 1111 * Account Name account on 3.21.2024.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+Learn More<https://mandrillapp.com/...> [Image removed by sender.]
+
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
             },
           },
           PENDING_EXPENSE: {
             REGEX: /Large Pending Expense/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              // prettier-ignore
+              DIRECT_EMAIL: `[BECU]
+[Large Pending Expense]
+
+Large Pending Expense
+
+There is a pending transaction in your 1111 * Account Name account with an amount larger than $0.00.
+
+(<description>)
+
+$<amount>
+
+Log In To Account<https://mandrillapp.com/...>
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+
+Learn More<https://mandrillapp.com/...> [https://analytics.moneydesktop.com/...]
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+
+From: BECU Notifications <noreply@becualerts.org>
+Date: Thursday, January 25, 2024 at 5:40 PM
+To: Your Name <youremail@domain.com>
+Subject: You have incurred 1 large expense.
+[Image removed by sender. BECU]
+
+[Image removed by sender. Large Pending Expense]
+
+Large Pending Expense
+
+There is a pending transaction in your 1111 * Account Name account with an amount larger than $0.00.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+Learn More<https://mandrillapp.com/...> [Image removed by sender.]
+
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+12770 Gateway Drive
+
+© 2024 All rights reserved`,
             },
           },
         },
@@ -58,15 +269,70 @@ function setBanks() {
         DELIMITER: /(?=Log In To Account)/g,
         EXTRA_SECTION: {
           REGEX: /12770 Gateway Drive/,
-          TEST_SECTIONS: {
-            DIRECT_EMAIL: "ASDF",
-            FORWARDED_EMAIL: "ASDF",
+          TEST_MESSAGES: {
+            DIRECT_EMAIL: null,
+            FORWARDED_EMAIL: `
+
+From: BECU Notifications <noreply@becualerts.org>
+Date: Tuesday, February 13, 2024 at 7:02 AM
+To: Your Name <youremail@domain.com>
+Subject: You have incurred 3 large expenses.
+[Image removed by sender. BECU]
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+[Image removed by sender. Large Expense]
+
+Large Expense
+
+An amount larger than $0.00 was spent from your 1111 * My Account Name account.
+
+(<description>)
+
+$<amount>
+Log In To Account<https://mandrillapp.com/...>
+
+
+Start reducing debt now
+
+Give us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.
+Learn More<https://mandrillapp.com/...> [Image removed by sender.]
+
+
+You're receiving this email because you enabled notifications in BECU.
+
+Manage Settings<https://mandrillapp.com/...> | Unsubscribe<https://mandrillapp.com/...>
+
+BECU
+
+MISSING EXTRA CONTENT REGEX MATCH
+
+© 2024 All rights reserved`,
           },
         },
       },
     },
     NON_UPDATES: [/(Low Account Balance)/],
-    NON_UPDATES_TEST: "ASDF",
   };
   BANKS.BOFA = {
     NAME: {
@@ -84,9 +350,51 @@ function setBanks() {
         HAS_TYPE: {
           EXPENSE: {
             REGEX: /Credit card transaction exceeds/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              // prettier-ignore
+              DIRECT_EMAIL: `[Bank of America.]
+[https://www.bankofamerica.com/...]
+Credit card transaction exceeds alert limit you set
+Card Type ending in 2222
+Amount:         $<amount>
+Date:   March 24, 2024
+Where:  <description>
+View details<https://www.bankofamerica.com/...>
+If you made this purchase or payment but don't recognize the amount, wait until the final purchase amount has posted before filing a dispute claim.
+If you don't recognize this activity, please contact us at the number on the back of your card.
+Did you know?
+You can choose how you get alerts from us including text messages and mobile notifications. Go to Alert Settings<https://www.bankofamerica.com/...>
+We'll never ask for your personal information such as SSN or ATM PIN in email messages. If you get an email that looks suspicious or you are not the intended recipient of this email, don't click on any links. Instead, forward to abuse@bankofamerica.com then delete it.
+Please don't reply to this automatically generated service email.
+Privacy Notice<https://www.bankofamerica.com/...>        Equal Housing Lender [https://www.bankofamerica.com/...] <https://www.bankofamerica.com/...>
+Bank of America, N.A. Member FDIC
+© 2024 Bank of America Corporation`,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+________________________________
+From: Bank of America <onlinebanking@ealerts.bankofamerica.com>
+Sent: Tuesday, April 2, 2024 10:45:26 PM (UTC-08:00) Pacific Time (US & Canada)
+To: youremail@domain.com <youremail@domain.com>
+Subject: Credit card transaction exceeds alert limit you set
+
+[Bank of America.]
+[https://www.bankofamerica.com/...]
+Credit card transaction exceeds alert limit you set
+Card Type ending in 2222
+Amount:         $<amount>
+Date:   April 03, 2024
+Where:  <description>
+This may have occurred for a purchase you made online, by phone, mail or when a merchant manually enters your card information.
+View details<https://www.bankofamerica.com/...>
+If you made this purchase or payment but don't recognize the amount, wait until the final purchase amount has posted before filing a dispute claim.
+If you don't recognize this activity, please contact us at the number on the back of your card.
+Did you know?
+You can choose how you get alerts from us including text messages and mobile notifications. Go to Alert Settings<https://www.bankofamerica.com/...>
+We'll never ask for your personal information such as SSN or ATM PIN in email messages. If you get an email that looks suspicious or you are not the intended recipient of this email, don't click on any links. Instead, forward to abuse@bankofamerica.com then delete it.
+Please don't reply to this automatically generated service email.
+Privacy Notice<https://www.bankofamerica.com/....>        Equal Housing Lender [https://www.bankofamerica.com/...] <https://www.bankofamerica.com/...>
+Bank of America, N.A. Member FDIC
+© 2024 Bank of America Corporation`,
             },
           },
         },
@@ -100,9 +408,39 @@ function setBanks() {
         HAS_TYPE: {
           DEPOSIT: {
             REGEX: /We've credited your account/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              DIRECT_EMAIL: null,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+
+From: Bank of America <onlinebanking@ealerts.bankofamerica.com>
+Date: Tuesday, March 26, 2024 at 1:21 AM
+To: youremail@domain.com <youremail@domain.com>
+Subject: We've credited your account
+[Image removed by sender. Bank of America.]
+
+[Image removed by sender.]
+
+We've credited your account
+
+
+
+
+<description> ending in 2222
+Amount:
+$<amount>
+Date of credit:
+March 26, 2024
+Merchant:
+<description>
+View account activity<https://www.bankofamerica.com/...>
+
+We'll never ask for your personal information such as SSN or ATM PIN in email messages. If you get an email that looks suspicious or you are not the intended recipient of this email, don't click on any links. Instead, forward to abuse@bankofamerica.com then delete it.
+Please don't reply to this automatically generated service email.
+Privacy Notice<https://www.bankofamerica.com/...>
+Equal Housing Lender [Image removed by sender.] <https://www.bankofamerica.com/...>
+Bank of America, N.A. Member FDIC
+© 2024 Bank of America Corporation`,
             },
           },
         },
@@ -116,9 +454,34 @@ function setBanks() {
         HAS_TYPE: {
           DEPOSIT: {
             REGEX: /Payment:/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              DIRECT_EMAIL: null,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+
+From: Bank of America <onlinebanking@ealerts.bankofamerica.com>
+Date: Wednesday, March 27, 2024 at 2:33 AM
+To: youremail@domain.com <youremail@domain.com>
+Subject: Confirmation: Thanks for Your Credit Card Payment
+[Image removed by sender.]
+[Image removed by sender. Bank of America (R)]
+Hi, YOUR FIRST NAME, we've received your credit card payment
+[Image removed by sender.]
+Payment:
+$
+<amount>
+To:
+<description> ending in - 2222
+Date posted:
+March 26, 2024
+View account details <https://www.bankofamerica.com/...>
+Thank you for being our customer.
+We'll never ask for your personal information such as SSN or ATM PIN in email messages. If you get an email that looks suspicious or you are not the intended recipient of this email, don't click on any links. Instead, forward to abuse@bankofamerica.com then delete it.
+Please don't reply to this automatically generated service email.
+Privacy Notice<https://www.bankofamerica.com/....>
+Equal Housing Lender [Image removed by sender.] <https://www.bankofamerica.com/....>
+Bank of America, N.A. Member FDIC
+© 2024 Bank of America Corporation`,
             },
           },
         },
@@ -132,9 +495,40 @@ function setBanks() {
         HAS_TYPE: {
           BALANCE: {
             REGEX: /Balance:/,
-            TEST_SECTIONS: {
-              DIRECT_EMAIL: "ASDF",
-              FORWARDED_EMAIL: "ASDF",
+            TEST_MESSAGES: {
+              DIRECT_EMAIL: null,
+              // prettier-ignore
+              FORWARDED_EMAIL: `
+________________________________
+From: Bank of America <onlinebanking@ealerts.bankofamerica.com>
+Sent: Tuesday, April 2, 2024 3:06:20 AM (UTC-08:00) Pacific Time (US & Canada)
+To: youremail@domain.com <youremail@domain.com>
+Subject: Your Available Balance
+
+[https://secure.bankofamerica.com/...]
+[Bank of America (R)]
+[Transfer]      [https://secure.bankofamerica.com/...]          Hi, YOUR FIRST NAME, here's your available balance
+[https://secure.bankofamerica.com/...]
+Balance:
+$       <amount>
+Account:        <description> - 2222
+Date:   April 02, 2024
+View account<https://www.bankofamerica.com/...>
+This balance may be different from what displays in Online Banking if you've had subsequent activity on your account since we sent this message.
+[Information]
+Not yet using the mobile app?
+Easily and securely manage your accounts on the go with the Bank of America Mobile app
+
+Download the app now<https://promotions.bankofamerica.com/...>
+Easily and securely manage your accounts on the go with the Bank of America Mobile app
+
+Download the app now<https://promotions.bankofamerica.com/...>
+We'll never ask for your personal information such as SSN or ATM PIN in email messages. If you get an email that looks suspicious or you are not the intended recipient of this email, don't click on any links. Instead, forward to abuse@bankofamerica.com then delete it.
+Please don't reply to this automatically generated service email.
+Privacy Notice<https://www.bankofamerica.com/...>        Equal Housing Lender [https://www.bankofamerica.com/...] <https://www.bankofamerica.com/...>
+Bank of America, N.A. Member FDIC
+© 2024 Bank of America Corporation
+`,
             },
           },
         },
@@ -146,6 +540,34 @@ function setBanks() {
       },
     },
     NON_UPDATES: [/(Did you know)/, /Your statement is available/],
+  };
+  BANKS.TEST = {
+    NAME: {
+      LONG: "Test Bank",
+      SHORT: "Test",
+    },
+    SENDERS: {
+      DIRECT: ["test@sender.com"],
+      FORWARDED: ["From: Test Bank <test@sender.com>"],
+    },
+    UPDATES: {
+      TEST_FORMAT: {
+        HAS_TYPE: {
+          BALANCE: {
+            REGEX: /Expense:/,
+            TEST_MESSAGES: {
+              DIRECT_EMAIL: `TEST DIRECT EMAIL`,
+              FORWARDED_EMAIL: `TEST FORWARDED EMAIL`,
+            },
+          },
+        },
+        ACCOUNT_NUM: /TEST/,
+        AMOUNT: /TEST/,
+        DESCRIPTION: /TEST/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+    },
   };
   Object.freeze(BANKS);
 }
@@ -161,13 +583,43 @@ function setUpdateTypes() {
   Object.freeze(UPDATE_TYPES);
 }
 
-// ************************************************************************
+// this is here to help with adding new bank products to the app
+// remember to remove any personal information before adding test strings
+function getPlainBodyMessagesForBankSetup() {
+  const matchingThreads = GmailApp.search("label:banksetup");
+  const threadMessageArrays = GmailApp.getMessagesForThreads(matchingThreads);
+  const allMessages = [].concat(...threadMessageArrays);
+  allMessages.forEach((thisMessage) => {
+    Logger.log(thisMessage.getPlainBody());
+  });
+}
+
+// *****************************************************************************************************************************
 // BUTTONS CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
 function buttonRunTheApp() {
   BASIC_CONFIG.TRANS_SHEET.activate();
   checkForNewAlerts("production");
+}
+
+// by default, buttonRunTestValues will:
+// > create or reset the separate "Test Run" sheet
+// > use messages built from test data
+function buttonRunTestValues() {
+  lockDocumentDuring(() => {
+    try {
+      setInitialTestData();
+      setGlobalValues("test");
+      TEST_DATA.SHEET.activate();
+      runTestSuite();
+      BASIC_CONFIG.SETTINGS_SHEET.getRange("B7").setValue(
+        BASIC_CONFIG.LOCAL_RUNTIME
+      );
+    } catch (error) {
+      addError(error, "Failed to run test values");
+    }
+  });
 }
 
 function buttonSetTimedTriggers() {
@@ -211,9 +663,9 @@ function buttonDeleteTimedTriggers() {
   });
 }
 
-// ************************************************************************
+// *****************************************************************************************************************************
 // CONFIG CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
 initGlobalVarAndErrorCollecting();
 setBasicConfig();
@@ -316,7 +768,7 @@ function setGlobalValues(setting) {
       addError(new Error("Unexpected setting in setGlobalValues"));
     }
     Object.freeze(GLOBAL_CONST);
-  } else {
+  } else if (!setting === "test") {
     addError(new Error("There was an error in setGlobalValues"));
   }
 }
@@ -345,6 +797,7 @@ function setStarredMessages() {
 function setProductionGlobalValues() {
   GLOBAL_CONST.MESSAGE_SOURCE = "email";
   GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT = "Financial Dashboard Error";
+  GLOBAL_CONST.WRITE_SHEET = BASIC_CONFIG.TRANS_SHEET;
 }
 
 function setTestGlobalValues() {
@@ -353,6 +806,8 @@ function setTestGlobalValues() {
   GLOBAL_VAR.ERROR_EMAIL_MESSAGES.push(
     "Financial Dashboard script was run in test mode"
   );
+  GLOBAL_CONST.WRITE_SHEET = TEST_DATA.SHEET;
+  addStarterValuesToTestsheet();
 }
 
 function lockDocumentDuring(functionToExecute) {
@@ -372,9 +827,9 @@ function lockDocumentDuring(functionToExecute) {
   }
 }
 
-// ************************************************************************
+// *****************************************************************************************************************************
 // MAIN CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
 function checkForNewAlerts(setting) {
   lockDocumentDuring(() => {
@@ -436,7 +891,7 @@ function processMessages(preppedMessages) {
     // so that rows pending deletion aren't re-ordered (got bottom to top)
     // seems this happen by accident but want to ensure it
     updateValues.forEach((thisUpdate) => {
-      writeToTransactionsSheet(thisUpdate, BASIC_CONFIG.TRANS_SHEET);
+      writeToTransactionsSheet(thisUpdate);
     });
     Logger.log("Updates added to sheet");
     runPostUpdatePendingReview();
@@ -496,7 +951,7 @@ function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
       );
       if (updateValuesFromSection) {
         allValuesFromAllUpdatesInThisMessage.push(updateValuesFromSection);
-      } else if (!messageFormat.EXTRA_SECTION?.test(thisSection)) {
+      } else if (!messageFormat.EXTRA_SECTION.REGEX?.test(thisSection)) {
         addError(new Error("Unrecognized transaction section"));
       }
     });
@@ -573,9 +1028,11 @@ function getUpdateTypeName(section, messageFormat) {
   return null;
 }
 
-function writeToTransactionsSheet(updateValues, sheet) {
-  sheet.insertRowBefore(2);
-  sheet.getRange(2, 1, 1, 6).setValues([updateValues]);
+function writeToTransactionsSheet(updateValues) {
+  GLOBAL_CONST.WRITE_SHEET.insertRowBefore(2);
+  GLOBAL_CONST.WRITE_SHEET.getRange(2, 1, 1, updateValues.length).setValues([
+    updateValues,
+  ]);
 }
 
 function updateStars() {
@@ -583,9 +1040,9 @@ function updateStars() {
   Logger.log("Message stars updated");
 }
 
-// ************************************************************************
+// *****************************************************************************************************************************
 // PENDING TRANSACTIONS CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
 function runPostUpdatePendingReview() {
   const transactionsForCheck = getTransactionsForPendingCheck();
@@ -605,7 +1062,7 @@ function getTransactionsForPendingCheck() {
       let rowNumber = index + 2;
       if (
         [UPDATE_TYPES.PENDING_EXPENSE, UPDATE_TYPES.PENDING_DEPOSIT].includes(
-          rowValues[2]
+          rowValues[3]
         )
       ) {
         transactionsForCheck.pending.push(
@@ -613,7 +1070,7 @@ function getTransactionsForPendingCheck() {
         );
       } else if (
         !rowValues[6] &&
-        !UPDATE_TYPES.BALANCE.includes(rowValues[2])
+        !UPDATE_TYPES.BALANCE.includes(rowValues[3])
       ) {
         // depends on no note being present for completed transactions
         // that have not already been used for a pending transaction
@@ -626,9 +1083,9 @@ function getTransactionsForPendingCheck() {
 }
 
 function getRowsOldestPendingAndUp() {
-  const sheet = BASIC_CONFIG.TRANS_SHEET;
+  const sheet = GLOBAL_CONST.WRITE_SHEET;
   const typeColumnValues = sheet
-    .getRange("D2:C" + sheet.getLastRow())
+    .getRange("D2:D" + sheet.getLastRow())
     .getValues();
   let lastPendingRow = -1;
   typeColumnValues.forEach((type, index) => {
@@ -719,10 +1176,10 @@ function getCompValues(transactionForComp) {
 }
 
 function isEqualSansAmount(pendingValues, completedValues) {
-  pendingValues = pendingValues.slice(0, 4).concat(pendingValues.slice(5));
+  pendingValues = pendingValues.slice(0, 3).concat(pendingValues.slice(4));
   completedValues = completedValues
-    .slice(0, 4)
-    .concat(completedValues.slice(5));
+    .slice(0, 3)
+    .concat(completedValues.slice(4));
   return JSON.stringify(pendingValues) === JSON.stringify(completedValues);
 }
 
@@ -793,13 +1250,13 @@ function updateResolvedTransactions(resolvedTransactions) {
   // make deletions from bottom up
   for (const completedTransaction of resolvedTransactions.completed) {
     noteCellRange = "G" + completedTransaction.row;
-    BASIC_CONFIG.TRANS_SHEET.getRange(noteCellRange).setValue(
+    GLOBAL_CONST.WRITE_SHEET.getRange(noteCellRange).setValue(
       completedTransaction.values[6]
     );
   }
   resolvedTransactions.pending.sort((a, b) => b.row - a.row);
   for (const pendingTransaction of resolvedTransactions.pending) {
-    BASIC_CONFIG.TRANS_SHEET.deleteRow(pendingTransaction.row);
+    GLOBAL_CONST.WRITE_SHEET.deleteRow(pendingTransaction.row);
   }
 }
 
@@ -839,378 +1296,458 @@ function isOlderThanFiveDays(pendingTransaction) {
   return pendingTransaction.values[0] < fiveDaysAgo;
 }
 
-// ************************************************************************
+// *****************************************************************************************************************************
 // TEST CODE
-// ************************************************************************
+// *****************************************************************************************************************************
 
-// by default, runAllTests will:
-// > reset and use the test spreadsheet
-// > use test messages built from the TestData file
-// > send error alerts to the test email
-
-function buttonRunTestValues() {
-  lockDocumentDuring(() => {
-    try {
-      let testRunSheet = getNewTestSheet();
-      testRunSheet.activate();
-      runTestSuite(testRunSheet);
-      BASIC_CONFIG.SETTINGS_SHEET.getRange("B7").setValue(
-        BASIC_CONFIG.LOCAL_RUNTIME
-      );
-    } catch (error) {
-      addError(error, "Failed to run test values");
-    }
-  });
+function setInitialTestData() {
+  const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
+  TEST_DATA = {
+    START_ENTRY_DATETIME: new Date(todaysDate.getTime() - 5 * 86400000),
+    RECEIVED_TIME: new Date(todaysDate.getTime() - 1 * 86400000),
+    RECIEVED_FIVE_DAYS_LATER: todaysDate,
+    ACCOUNT_NUMBERS: {
+      BECU: "1111",
+      BOFA: "2222",
+    },
+    AMOUNTS: {
+      COMPLETED: [
+        "0.01",
+        "0.10",
+        "1.00",
+        "12.30",
+        "456.78",
+        "1,234.56",
+        "1,234,567.89",
+      ],
+      PENDING_MATCH: {
+        ONE: "1,000.00",
+        TWO: "1,500.00",
+        THREE: "2,000.00",
+      },
+      PENDING_APPROX_MATCH: "2,505.00",
+      PENDING_ALMOST_APPROX_MATCH: "3,033.00",
+    },
+    DESCRIPTION: {
+      PENDING_EXPENSE_MATCH: "PENDING EXPENSE MATCH",
+      PENDING_APPROX_MATCH: "APPROXIMATE MATCH",
+      PENDING_ALMOST_APPROX_MATCH: "ALMOST APPROXIMATE MATCH",
+    },
+    STARTER_NOTE: "STARTER ENTRY",
+    EXPECTED_RESULTS: [
+      ["BofA", "2222", "Expense", "-3,033.00", "ALMOST APPROXIMATE MATCH"],
+      ["BofA", "2222", "Expense", "-2,505.00", "APPROXIMATE MATCH"],
+      ["BECU", "1111", "Expense", "-2,000.00", "PENDING EXPENSE MATCH"],
+      ["BECU", "1111", "Expense", "-1,500.00", "PENDING EXPENSE MATCH"],
+      ["BECU", "1111", "Expense", "-1,000.00", "PENDING EXPENSE MATCH"],
+      ["BECU", "1111", "Expense", "-30.00", "NON MATCHING END SECTION"],
+      ["BECU", "1111", "Expense", "-30.00", "NON MATCHING END SECTION"],
+      ["BECU", "1111", "Expense", "-30.00", "NON MATCHING END SECTION"],
+      ["BECU", "1111", "Expense", "-20.00", "DIRECT EMAIL"],
+      ["BofA", "2222", "Expense", "-1,234,567.89", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-1,234.56", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-456.78", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-12.30", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-1.00", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-0.10", "TEST AMOUNTS"],
+      ["BofA", "2222", "Expense", "-0.01", "TEST AMOUNTS"],
+      ["BofA", "2222", "Deposit", "10.07", "EACH BANK, EACH TYPE"],
+      ["BofA", "2222", "Expense", "-10.06", "EACH BANK, EACH TYPE"],
+      ["BofA", "2222", "Deposit", "10.05", "EACH BANK, EACH TYPE"],
+      ["BofA", "2222", "Balance", "10.04", "EACH BANK, EACH TYPE"],
+      ["BECU", "1111", "Pending Expense", "-10.03", "EACH BANK, EACH TYPE"],
+      ["BECU", "1111", "Expense", "-10.02", "EACH BANK, EACH TYPE"],
+      ["BECU", "1111", "Expense", "-10.02", "EACH BANK, EACH TYPE"],
+      ["BECU", "1111", "Expense", "-10.02", "EACH BANK, EACH TYPE"],
+      ["BECU", "1111", "Deposit", "10.01", "EACH BANK, EACH TYPE"],
+      [
+        "BECU",
+        "1111",
+        "Pending Expense",
+        "-3,000.00",
+        "ALMOST APPROXIMATE MATCH",
+      ],
+      ["BECU", "1111", "Expense", "-5,555.55", "SPACE FILLER"],
+      ["BECU", "1111", "Expense", "-5,555.55", "SPACE FILLER"],
+      [
+        "BECU",
+        "1111",
+        "Pending Expense",
+        "-500.00",
+        "PENDING EXPENSE NO MATCH",
+      ],
+      ["BECU", "1111", "Deposit", "10,000.00", "BALANCE"],
+    ],
+  };
+  createNewTestSheet();
 }
 
-function getNewTestSheet() {
-  let testRunSheetName = "Test Run";
-  let testRunSheet = BASIC_CONFIG.SPREADSHEET.getSheetByName(testRunSheetName);
-  if (testRunSheet) {
-    BASIC_CONFIG.SPREADSHEET.deleteSheet(testRunSheet);
+function createNewTestSheet() {
+  const testRunSheetName = "Test Run";
+  const testSheet = BASIC_CONFIG.SPREADSHEET.getSheetByName(testRunSheetName);
+  if (testSheet) {
+    BASIC_CONFIG.SPREADSHEET.deleteSheet(testSheet);
   }
-  testRunSheet = BASIC_CONFIG.SPREADSHEET.insertSheet(testRunSheetName);
-  return testRunSheet;
+  TEST_DATA.SHEET = BASIC_CONFIG.SPREADSHEET.insertSheet(
+    testRunSheetName,
+    BASIC_CONFIG.SPREADSHEET.getSheets().length
+  );
+  TEST_DATA.SHEET.hideColumns(9, 7);
+  TEST_DATA.WHOLE_HEIGHT_RANGE = TEST_DATA.SHEET.getRange("A1:M1000");
+  TEST_DATA.WHOLE_HEIGHT_RANGE.setWrapStrategy(
+    SpreadsheetApp.WrapStrategy.CLIP
+  );
+  TEST_DATA.WHOLE_HEIGHT_RANGE.setHorizontalAlignment("right");
+  createTransHeadlines();
 }
 
-function runTestSuite(testSheet) {
-  createTransHeadlines(testSheet);
-  // add starter values
-  // run the test values
-  reconfigureSheetForCompView(testSheet);
-  // insert expected values
-  checkTestEquality(testSheet);
-}
-
-function createTransHeadlines(testSheet) {
+function createTransHeadlines() {
   let transHeadlineValues = [
-    [
       "Email time and date",
       "Bank",
       "Account #",
       "Update Type",
       "Amount",
       "Description",
-      "Note",
-    ],
+      "System Note",
   ];
-  let transHeadlineRanges = ["A1:G1", "I1:O1"];
-  let transHeadlineColumnWidths = [230, 120, 120, 120, 120, 335, 480];
-  testSheet.setRowHeight(1, 31);
-  transHeadlineRanges.forEach((rangeString) => {
-    let range = testSheet.getRange(rangeString);
-    range.setValues(transHeadlineValues);
+  let headlines = [
+    {
+      range: "A1:G1",
+      values: transHeadlineValues,
+    },
+    {
+      range: "I1:M1",
+      values: transHeadlineValues.slice(1, transHeadlineValues.length - 1),
+    },
+  ];
+  let transHeadlineColumnWidths = [140, 50, 80, 120, 80, 220, 460];
+  TEST_DATA.SHEET.setRowHeight(1, 31);
+  headlines.forEach((headlineSection) => {
+    let range = TEST_DATA.SHEET.getRange(headlineSection.range);
+    range.setValues([headlineSection.values]);
     formatHeadline(range);
-    range.setHorizontalAlignment("right");
   });
   transHeadlineColumnWidths.forEach((width, index) => {
-    testSheet.setColumnWidth(index + 1, width);
-    testSheet.setColumnWidth(index + 9, width);
+    TEST_DATA.SHEET.setColumnWidth(index + 1, width);
   });
-  formatHeadline(testSheet.getRange("Q1").setValue("Equal"));
+  formatHeadline(
+    TEST_DATA.SHEET.getRange("O1")
+      .setValue("Equal")
+      .setHorizontalAlignment("center")
+  );
 }
 
 function formatHeadline(range) {
   range
     .setVerticalAlignment("middle")
-    .setHorizontalAlignment("center")
     .setFontWeight("bold")
     .setBackground("#4c5869")
     .setVerticalAlignment("middle")
     .setFontColor("#FFFFFF");
 }
 
-function reconfigureSheetForCompView(testSheet) {
-  testSheet.getRange("A1:O1").setHorizontalAlignment("left");
-  for (var col = 1; col <= 17; col++) {
-    testSheet.setColumnWidth(col, 60);
-  }
-  testSheet.insertRowBefore(1);
-  testSheet.getRange("A1:Q1").setHorizontalAlignment("center");
-  testSheet.getRange("A1:G1").merge().setValue("Test Results");
-  testSheet.getRange("I1:O1").merge().setValue("Expected Results");
-  testSheet.getRange("Q1:Q2").merge();
-}
-
-function checkTestEquality(testSheet) {
-  testSheet
-    .getRange("Q3")
-    .setValue('=join("",A3:G3)=join("",I3:O3)')
-    .autoFill(
-      testSheet.getRange("Q3:Q10"),
-      SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES
-    );
-}
-
-// new stuff above
-
-function runAllTests() {
-  setTestData();
-  resetTestSheet();
-  checkForNewAlerts("test");
-}
-
-function resetTestSheet() {
-  const testSheet = getTransactionsSheet(SETTINGS.TEST.SPREADSHEET_ID);
-  testSheet
-    .getRange(2, 1, testSheet.getLastRow() - 1, testSheet.getLastColumn())
-    .clearContent();
-  TEST_DATA.SHEET_START_VALUES.ROWS.forEach((rowValues) => {
-    writeToTransactionsSheet(rowValues, testSheet);
-  });
-}
-
-function prepMessagesFromTestData() {
-  let preppedMessages = [
-    getTestMessageContentForSingleExpenseAllTestAmounts(),
-    getTestMessageContentForAllTransactionTypes(),
-    getTestMessageContentForResolvePendingFromPreExisting(),
-    getTestMessageContentForResolve3PendingFromPreExisting(),
-    getTestMessageContentForResolvePendingFromConcurrent(),
-    getTestMessageContentForLowBalanceAlert(),
-    getTestMessageContentForUnknownEndContent(),
-    getTestMessageContentForResolvePendingFromApproximateMatch(),
-    getTestMessageContentForAlmostApproximateMatch(),
+function addStarterValuesToTestsheet() {
+  TEST_DATA.STARTER_VALUES = [
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.DEPOSIT,
+      "10,000.00",
+      "BALANCE",
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-500.00",
+      "PENDING EXPENSE NO MATCH",
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-" + TEST_DATA.AMOUNTS.PENDING_MATCH.ONE,
+      TEST_DATA.DESCRIPTION.PENDING_EXPENSE_MATCH,
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-" + TEST_DATA.AMOUNTS.PENDING_MATCH.TWO,
+      TEST_DATA.DESCRIPTION.PENDING_EXPENSE_MATCH,
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.EXPENSE,
+      "-5,555.55",
+      "SPACE FILLER",
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-" + TEST_DATA.AMOUNTS.PENDING_MATCH.THREE,
+      TEST_DATA.DESCRIPTION.PENDING_EXPENSE_MATCH,
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.EXPENSE,
+      "-5,555.55",
+      "SPACE FILLER",
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BOFA.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BOFA,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-2,500.00",
+      TEST_DATA.DESCRIPTION.PENDING_APPROX_MATCH,
+      TEST_DATA.STARTER_NOTE,
+    ],
+    [
+      TEST_DATA.START_ENTRY_DATETIME,
+      BANKS.BECU.NAME.SHORT,
+      TEST_DATA.ACCOUNT_NUMBERS.BECU,
+      UPDATE_TYPES.PENDING_EXPENSE,
+      "-3,000.00",
+      TEST_DATA.DESCRIPTION.PENDING_ALMOST_APPROX_MATCH,
+      TEST_DATA.STARTER_NOTE,
+    ],
   ];
-  const receivedTime = new Date();
-  preppedMessages.forEach((thisMessage, index) => {
-    receivedTimeAndContent = [receivedTime, thisMessage];
-    preppedMessages[index] = receivedTimeAndContent;
+  TEST_DATA.STARTER_VALUES.forEach((rowValues) => {
+    writeToTransactionsSheet(rowValues);
   });
+}
+
+function runTestSuite() {
+  checkForNewAlerts("test");
+  reconfigureSheetForCompView();
+  addExpectedResults();
+  checkTestEquality();
+}
+
+// only looks at BECU and Bank of America
+// becu includes multi update message
+function prepMessagesFromTestData() {
+  TEST_DATA.BANKS = {
+    ONE: BANKS.BECU,
+    TWO: BANKS.BOFA,
+  };
+  let preppedMessages = [
+    ...getTestMessageForEachType(),
+    ...getTestMessageForEachTestAmount(),
+    getOneTestMessageForDirectEmail(),
+    getOneTestMessageForNonMatchingExtraSection(),
+    getOneTestMessageForNonUpdateMessage(),
+    getOneTestMessageForUnknownMessageFormat(),
+    getOneTestMessageForMultiplePendingExpenseTypeWithExactMatch(),
+    getOneTestMessageForPendingExpenseTypeWithApproximateMatch(),
+    getOneTestMessageForPendingExpenseTypeWithAlmostApproximateMatch(),
+  ];
   return preppedMessages;
 }
 
-function getTestMessageContentForSingleExpenseAllTestAmounts() {
-  let sections = "";
-  Object.entries(TEST_DATA.AMOUNTS).forEach((amount) => {
-    let thisSection = replaceSectionValues(amount[1], TEST_DATA.TYPE.EXPENSE);
-    sections = sections.concat(thisSection);
-  });
-  sections = sections.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    "(One Expense, All Amounts)"
-  );
-  return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
+function getTestMessageForEachType() {
+  let testMessagesForEachtype = [];
+  let amount = 10.01;
+  Object.entries(TEST_DATA.BANKS)
+    .sort()
+    .forEach((bank) => {
+      Object.entries(bank[1].UPDATES)
+        .sort()
+        .forEach((updateFormat) => {
+          Object.entries(updateFormat[1].HAS_TYPE)
+            .sort()
+            .forEach((type) => {
+              let testContent = populateTestMessageContent(
+                type[1].TEST_MESSAGES.FORWARDED_EMAIL,
+                amount.toFixed(2),
+                "EACH BANK, EACH TYPE"
+              );
+              testMessagesForEachtype.push(
+                getTestMessageObject("forwarded", testContent)
+              );
+              amount += 0.01;
+            });
+        });
+    });
+  return testMessagesForEachtype;
 }
 
-function getTestMessageContentForAllTransactionTypes() {
-  let sectionOne = replaceSectionValues(
-    TEST_DATA.AMOUNTS.TWO_DIGIT,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let sectionTwo = replaceSectionValues(
-    TEST_DATA.AMOUNTS.THREE_DIGIT,
-    TEST_DATA.TYPE.PENDING_EXPENSE
-  );
-  let sectionThree = replaceSectionValues(
-    TEST_DATA.AMOUNTS.FOUR_DIGIT,
-    TEST_DATA.TYPE.DEPOSIT
-  );
-  let sections = "".concat(sectionOne, sectionTwo, sectionThree);
-  sections = sections.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    "(All Transaction Types)"
-  );
-  return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
+function populateTestMessageContent(content, amount, description) {
+  return content
+    .replace(/<amount>/g, amount)
+    .replace(/<description>/g, description);
 }
 
-function getTestMessageContentForResolvePendingFromPreExisting() {
-  let sectionOne = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_ONE,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  sectionOne = sectionOne.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    TEST_DATA.SHEET_START_VALUES.PENDING_DESCRIPTION
-  );
-  return "".concat(sectionOne, TEST_DATA.SECTIONS.END_CONTENT);
-}
-
-function getTestMessageContentForResolve3PendingFromPreExisting() {
-  let sectionOne = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_TWO,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let sectionTwo = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_THREE,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let sectionThree = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_FOUR,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let sections = "".concat(sectionThree, sectionTwo, sectionOne);
-  sections = sections.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    TEST_DATA.SHEET_START_VALUES.PENDING_DESCRIPTION
-  );
-  return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
-}
-
-function getTestMessageContentForResolvePendingFromConcurrent() {
-  let sectionOne = replaceSectionValues(
-    TEST_DATA.AMOUNTS.TWO_DIGIT,
-    TEST_DATA.TYPE.PENDING_EXPENSE
-  );
-  let sectionTwo = replaceSectionValues(
-    TEST_DATA.AMOUNTS.TWO_DIGIT,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let sections = "".concat(sectionOne, sectionTwo);
-  sections = sections.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    "(Resolve Concurrent Pending)"
-  );
-  return "".concat(sections, TEST_DATA.SECTIONS.END_CONTENT);
-}
-
-function getTestMessageContentForLowBalanceAlert() {
-  return "".concat(
-    TEST_DATA.SECTIONS.LOW_BALANCE,
-    TEST_DATA.SECTIONS.END_CONTENT
-  );
-}
-
-function getTestMessageContentForUnknownEndContent() {
-  let sectionOne = replaceSectionValues(
-    TEST_DATA.AMOUNTS.THREE_DIGIT,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  let newAdditionContent = TEST_DATA.SECTIONS.END_CONTENT.replace(
-    "12770 Gateway Drive",
-    "anything else"
-  );
-  sectionOne = sectionOne.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    "(Unknown End Content)"
-  );
-  return "".concat(sectionOne, newAdditionContent);
-}
-
-function getTestMessageContentForResolvePendingFromApproximateMatch() {
-  let section = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_APPROX_MATCH,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  section = section.replace(TEST_DATA.DESCRIPTION_REGEX, "(Approximate Match)");
-  return "".concat(section, TEST_DATA.SECTIONS.END_CONTENT);
-}
-
-function getTestMessageContentForAlmostApproximateMatch() {
-  let section = replaceSectionValues(
-    TEST_DATA.AMOUNTS.PENDING_ALMOST_APPROX_MATCH,
-    TEST_DATA.TYPE.EXPENSE
-  );
-  section = section.replace(
-    TEST_DATA.DESCRIPTION_REGEX,
-    "(Almost Approximate Match)"
-  );
-  return "".concat(section, TEST_DATA.SECTIONS.END_CONTENT);
-}
-
-function replaceSectionValues(amount, type) {
-  let section = TEST_DATA.SECTIONS.TRANSACTION;
-  section = section.replace("replace-type-image-alt", type.IMAGE_ALT);
-  section = section.replace("replace-type-copy", type.COPY);
-  section = section.replace("replace-amount", amount);
-  return section;
-}
-
-// ************************************************************************
-// TEST DATA CODE
-// ************************************************************************
-
-function setTestData() {
-  const starterEntryDatetime = new Date(2023, 11, 31, 21, 59, 0, 0);
-  TEST_DATA = {
-    SECTIONS: {
-      TRANSACTION:
-        "[BECU]\n\nreplace-type-image-alt\n\nreplace-type-copy\n\nAn amount larger than $0.00 was spent from your 1234 * account.\n\n(Description)\n\n$replace-amount\n\nLog In To Account<link>\n\n",
-      LOW_BALANCE:
-        "[BECU]\n\n[Low Account Balance]\n\nLow Account Balance\n\nYour 1234 * Joint Checking account balance has dropped to:\n\n$666.66\n\nLog In To Account<link>\n\n",
-      END_CONTENT:
-        "Start reducing debt now\n\nGive us 50 minutes or less and we'll help you build a plan that actually works. Schedule your free Financial Health Check today.\n\nLearn More<link>\n\nYou're receiving this email because you enabled notifications in BECU.\n\nManage Settings<link>\n\nBECU\n\n12770 Gateway Drive\n\n© 2023 All rights reserved",
-    },
-    AMOUNTS: {
-      PENNY: "0.01",
-      DIME: "0.10",
-      DOLLAR: "1.00",
-      TWO_DIGIT: "12.30",
-      THREE_DIGIT: "456.78",
-      FOUR_DIGIT: "1,234.56",
-      SEVEN_DIGIT: "1,234,567.89",
-      PENDING_ONE: "500.00",
-      PENDING_TWO: "1,000.00",
-      PENDING_THREE: "1,500.00",
-      PENDING_FOUR: "2,000.00",
-      PENDING_APPROX_MATCH: "2,505.00",
-      PENDING_ALMOST_APPROX_MATCH: "3,033.00",
-    },
-    TYPE: {
-      EXPENSE: {
-        IMAGE_ALT: "[Large Expense]",
-        COPY: "Large Expense",
-      },
-      PENDING_EXPENSE: {
-        IMAGE_ALT: "[Large Pending Expense]",
-        COPY: "Large Pending Expense",
-      },
-      DEPOSIT: {
-        IMAGE_ALT: "[Large Account Deposit]",
-        COPY: "Large Deposit",
-      },
-    },
-    DESCRIPTION_REGEX: /\(Description\)/g,
-    SHEET_START_VALUES: {
-      ROWS: [
-        [starterEntryDatetime, "1234", "Deposit", "10,000.00", "Starter Entry"],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-500.00",
-          "Test Pending Exp.",
-        ],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-1,000.00",
-          "Test Pending Exp.",
-        ],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-1,500.00",
-          "Test Pending Exp.",
-        ],
-        [starterEntryDatetime, "1234", "Expense", "-5,555.55", "Space Filler"],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-2,000.00",
-          "Test Pending Exp.",
-        ],
-        [starterEntryDatetime, "1234", "Expense", "-5,555.55", "Space Filler"],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-2,500.00",
-          "Approximate Match",
-        ],
-        [
-          starterEntryDatetime,
-          "1234",
-          "Pending Expense",
-          "-3,000.00",
-          "Almost Approximate Match",
-        ],
-      ],
-      PENDING_DESCRIPTION: "(Test Pending Exp.)",
-    },
+function getTestMessageObject(from, content) {
+  return {
+    from: from,
+    time: TEST_DATA.RECEIVED_TIME,
+    content: content,
   };
-  Object.freeze(TEST_DATA);
+}
+
+function getTestMessageForEachTestAmount() {
+  let testMessagesForEachtype = [];
+  const content =
+    BANKS.BOFA.UPDATES.CC_EXPENSE_FORMAT.HAS_TYPE.EXPENSE.TEST_MESSAGES
+      .FORWARDED_EMAIL;
+  TEST_DATA.AMOUNTS.COMPLETED.forEach((amount) => {
+    contentWithThisAmount = populateTestMessageContent(
+      content,
+      amount,
+      "TEST AMOUNTS"
+    );
+    testMessagesForEachtype.push(
+      getTestMessageObject("forwarded", contentWithThisAmount)
+    );
+  });
+  return testMessagesForEachtype;
+}
+
+function getOneTestMessageForDirectEmail() {
+  let content =
+    BANKS.BECU.UPDATES.TRANSACTION_FORMAT.HAS_TYPE.EXPENSE.TEST_MESSAGES
+      .DIRECT_EMAIL;
+  let from = BANKS.BECU.SENDERS.DIRECT[0];
+  let testMessage = getTestMessageObject(
+    from,
+    populateTestMessageContent(content, "20.00", "DIRECT EMAIL")
+  );
+  return testMessage;
+}
+
+function getOneTestMessageForNonMatchingExtraSection() {
+  let content =
+    BANKS.BECU.UPDATES.TRANSACTION_FORMAT.EXTRA_SECTION.TEST_MESSAGES
+      .FORWARDED_EMAIL;
+  let testMessage = getTestMessageObject(
+    "forwarded",
+    populateTestMessageContent(content, "30.00", "NON MATCHING END SECTION")
+  );
+  return testMessage;
+}
+
+function getOneTestMessageForUnknownMessageFormat() {
+  return getTestMessageObject(BANKS.BECU.SENDERS.DIRECT[0], "uknown content");
+}
+
+function getOneTestMessageForNonUpdateMessage() {
+  return getTestMessageObject(
+    BANKS.BECU.SENDERS.DIRECT[0],
+    "(Low Account Balance)"
+  );
+}
+
+function getOneTestMessageForMultiplePendingExpenseTypeWithExactMatch() {
+  let contentWithThreeExpenses =
+    BANKS.BECU.UPDATES.TRANSACTION_FORMAT.HAS_TYPE.EXPENSE.TEST_MESSAGES
+      .FORWARDED_EMAIL;
+  const pendingMatchAmounts = Object.values(
+    TEST_DATA.AMOUNTS.PENDING_MATCH
+  ).sort();
+  pendingMatchAmounts.forEach((amount) => {
+    contentWithThreeExpenses = contentWithThreeExpenses.replace(
+      "<amount>",
+      amount
+    );
+  });
+  contentWithThreeExpenses = contentWithThreeExpenses.replace(
+    /<description>/g,
+    TEST_DATA.DESCRIPTION.PENDING_EXPENSE_MATCH
+  );
+  return getTestMessageObject("forwarded", contentWithThreeExpenses);
+}
+
+function getOneTestMessageForPendingExpenseTypeWithApproximateMatch() {
+  let content =
+    BANKS.BOFA.UPDATES.CC_EXPENSE_FORMAT.HAS_TYPE.EXPENSE.TEST_MESSAGES
+      .FORWARDED_EMAIL;
+  let testMessage = getTestMessageObject(
+    "forwarded",
+    populateTestMessageContent(
+      content,
+      TEST_DATA.AMOUNTS.PENDING_APPROX_MATCH,
+      TEST_DATA.DESCRIPTION.PENDING_APPROX_MATCH
+    )
+  );
+  testMessage.time = TEST_DATA.RECIEVED_FIVE_DAYS_LATER;
+  return testMessage;
+}
+
+function getOneTestMessageForPendingExpenseTypeWithAlmostApproximateMatch() {
+  let content =
+    BANKS.BOFA.UPDATES.CC_EXPENSE_FORMAT.HAS_TYPE.EXPENSE.TEST_MESSAGES
+      .FORWARDED_EMAIL;
+  let testMessage = getTestMessageObject(
+    "forwarded",
+    populateTestMessageContent(
+      content,
+      TEST_DATA.AMOUNTS.PENDING_ALMOST_APPROX_MATCH,
+      TEST_DATA.DESCRIPTION.PENDING_ALMOST_APPROX_MATCH
+    )
+  );
+  testMessage.time = TEST_DATA.RECIEVED_FIVE_DAYS_LATER;
+  return testMessage;
+}
+
+function reconfigureSheetForCompView() {
+  TEST_DATA.WHOLE_HEIGHT_RANGE.setHorizontalAlignment("left");
+  for (var col = 1; col <= 15; col++) {
+    TEST_DATA.SHEET.setColumnWidth(col, 80);
+  }
+  TEST_DATA.SHEET.insertRowBefore(1);
+  TEST_DATA.SHEET.getRange("A1:Q1").setHorizontalAlignment("center");
+  TEST_DATA.SHEET.getRange("A1:G1").merge().setValue("Test Results");
+  TEST_DATA.SHEET.getRange("I1:M1").merge().setValue("Expected Results");
+  TEST_DATA.SHEET.getRange("O1:O2").merge();
+  TEST_DATA.SHEET.showColumns(9, 9);
+}
+
+function addExpectedResults() {
+  const lastRow = TEST_DATA.SHEET.getLastRow();
+  const amountColumns = ["E3:E" + lastRow, "L3:L" + lastRow];
+  const resultsLength = TEST_DATA.EXPECTED_RESULTS.length;
+  amountColumns.forEach((range) => {
+    TEST_DATA.SHEET.getRange(range).setNumberFormat("#,##0.00");
+  });
+  TEST_DATA.SHEET.getRange(3, 9, resultsLength, 5).setValues(
+    TEST_DATA.EXPECTED_RESULTS
+  );
+}
+
+function checkTestEquality() {
+  const lastRow = TEST_DATA.SHEET.getLastRow();
+  TEST_DATA.SHEET.getRange("O3")
+    .setValue('=join("",B3:F3)=join("",I3:M3)')
+    .autoFill(
+      TEST_DATA.SHEET.getRange("O3:O" + lastRow),
+      SpreadsheetApp.AutoFillSeries.DEFAULT_SERIES
+    );
+  TEST_DATA.SHEET.getRange("O3:O" + lastRow)
+    .getValues()
+    .forEach((row, index) => {
+      const cell = TEST_DATA.SHEET.getRange("O" + (index + 3));
+      cell.setBackground(
+        row[0] === true ? "#9cff3d" : row[0] === false ? "#ff0000" : null
+      );
+    });
 }
