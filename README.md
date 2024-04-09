@@ -53,6 +53,10 @@ Once you have some bank alert emails successfully starred and labeled, click the
 
 Finally, when you are ready to automate the script, click the `Set timed triggers` button.
 
-_NOTE: If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match._
+### 4. Troubleshooting and development
+
+If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match.
+
+To rerun an email, assuming it's already labeled with `bankupdate`, star the email manually in Gmail.  Be aware, there is a small bug with Google Apps Script and Gmail stars.  When an email is starred manually via the Gmail UI and then unstarred via the script, the star will remain in Gmail.  The script will still consider the email unstarred even though the star still appears in Gmail.  This should not impact script usability and is only a small nuisance while testing. Just remember to star and unstar manually for testing. Emails that are both starred and unstarred by the script will not appear as starred in Gmail.
 
 Enjoy and let me know if I missed anything.

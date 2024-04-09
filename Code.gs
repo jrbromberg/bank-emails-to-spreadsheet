@@ -263,7 +263,7 @@ BECU
           },
         },
         ACCOUNT_NUM: /\d{4}(?=\s\*)/,
-        AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
+        AMOUNT: /\$(?!0\.00|1\.00)[\d,]*\.\d\d/,
         DESCRIPTION: /(?<=larger than)[\s\S]*(?<=\()(.*)(?=\))/,
         DELIMITER: /(?=Log In To Account)/g,
         EXTRA_SECTION: {
