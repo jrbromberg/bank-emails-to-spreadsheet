@@ -17,7 +17,7 @@ The script is set up to work with the below accounts. To modify the script to wo
 
 # Setup
 
-_NOTE: These instructions utilize the 'Make a copy' option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo._
+_NOTE: These instructions utilize the `Make a copy` file option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo._
 
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
@@ -42,7 +42,7 @@ You can `Make a copy` from the file menu or you can [click this link](https://do
 
 In the settings tab, click the `Run test values` button.  After a moment, there will be a popup to authorize the script.  You'll need to go through a series of steps:
 - Authorization required: click `OK`
-- Choose an account: click your Gmail account
+- Choose an account: click the host Gmail account
 - Google hasn’t verified this app: click `Advanced` then click `Go to Untitled project (unsafe)`
 - Sign in to Untitled project: click `Continue`
 - Untitled project wants to access your Google Account: click `Allow`
