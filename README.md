@@ -53,4 +53,6 @@ Once you have some bank alert emails successfully starred and labeled, click the
 
 Finally, when you are ready to automate the script, click the `Set timed triggers` button.
 
+_NOTE: If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match._
+
 Enjoy and let me know if I missed anything.
