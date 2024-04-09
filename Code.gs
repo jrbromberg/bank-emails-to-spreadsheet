@@ -62,10 +62,10 @@ BECU
 
 © 2024 All rights reserved`,
               // prettier-ignore
-              FORWARDED_EMAIL: `
-
+              FORWARDED_EMAIL: `	
+________________________________
 From: BECU Notifications <noreply@becualerts.org>
-Date: Tuesday, February 13, 2024 at 7:02 AM
+Sent: Monday, April 8, 2024 9:30:03 AM (UTC-08:00) Pacific Time (US & Canada)
 To: Your Name <youremail@domain.com>
 Subject: You have incurred 3 large expenses.
 [Image removed by sender. BECU]
@@ -264,7 +264,7 @@ BECU
         },
         ACCOUNT_NUM: /\d{4}(?=\s\*)/,
         AMOUNT: /(?!\$0\.00)\$[\d,]*\.\d\d/,
-        DESCRIPTION: /(?<=\().*(?=\))/,
+        DESCRIPTION: /(?<=larger than)[\s\S]*(?<=\()(.*)(?=\))/,
         DELIMITER: /(?=Log In To Account)/g,
         EXTRA_SECTION: {
           REGEX: /12770 Gateway Drive/,
