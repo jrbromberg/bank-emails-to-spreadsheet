@@ -59,6 +59,6 @@ If you setup a separate Google account to host your spreadsheet and you want to 
 
 To rerun an email, assuming it's already labeled with `bankupdate`, star the email manually in Gmail.  Be aware, there is a small bug with Google Apps Script and Gmail stars.  When an email is starred manually via the Gmail UI and then unstarred via the script, the star will remain in Gmail.  The script will still consider the email unstarred even though the star still appears in Gmail.  This should not impact script usability and is only a small nuisance while testing. Just remember to star and unstar manually for testing. Emails that are both starred and unstarred by the script will not appear as starred in Gmail.
 
-I included a `getPlainBodyMessagesForBankSetup` function to help with setting up regex.  If you label an email `banksetup`, this function will log a simplified string of the email that is used by the script for scraping.  Bank and regex information is stored in the `BANKS` object.
+If you are interested in expanding the script to work with additional accounts, you can use the `getPlainBodyMessagesForBankSetup` function to help with setting up regex.  If you label an email `banksetup`, this function will log a simplified string of the email that is used by the script for scraping.  Bank and regex information is stored in the `BANKS` object.
 
 Enjoy and let me know if I missed anything.
