@@ -1,6 +1,6 @@
 # Summary
 
-This is a free and safe solution for pulling bank transactions into a Google spreadsheet. Bank login information is not required. This works by scraping your emails.  Your information is not used or shared outside of your Google account.
+This is a free and safe solution for pulling bank transactions and balances into a Google spreadsheet. Bank login information is not required. This works by scraping your emails.  Your information is not used or shared outside of your Google account.
 
 The script is set up to work with the below accounts.
 - Bank of America Checking
