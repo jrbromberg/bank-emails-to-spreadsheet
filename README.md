@@ -1,6 +1,6 @@
 # Summary
 
-This is a free and safe solution for pulling bank transactions and balances into a Google spreadsheet. Bank login information is not required. This works by scraping your emails.  Your information is not used or shared outside of your Google account.
+This is a free and safe solution for pulling bank transactions and balances into a Google spreadsheet. Bank login information is not required. This works by scraping your bank alert emails.  Your information is not used or shared outside of your Google account.
 
 The script is set up to work with the below accounts.
 - Bank of America Checking
@@ -18,11 +18,11 @@ The script is set up to work with the below accounts.
 # Setup
 
 ### 1. Email setup
-If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
+You can use an existing Gmail account or setup a new account.  The script can process both direct emails and forwarded emails. In the Gmail account that will host the spreadsheet:
 
 Create a label named `bankupdate`
 
-Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, enter just your email in the sender emails.
+Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, enter your email in the `From` field.
 - `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
