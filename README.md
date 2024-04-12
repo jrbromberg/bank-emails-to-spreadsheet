@@ -10,7 +10,7 @@ The script is set up to work with the below accounts.
 # Features
 
 - Transaction or balance details pulled into Transactions tab for each update
-- Balances summed by account in balances tab
+- Balances summed by account in Balances tab
 - New transactions checked against pending transactions to keep balances accurate
 - Emailed error alerts
 - Testing suite
