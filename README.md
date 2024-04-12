@@ -53,7 +53,7 @@ Finally, when you are ready to automate the script, click the `Set timed trigger
 
 ### 5. Troubleshooting and development
 
-NOTE: The above instructions utilize the `Make a copy` file option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo.
+NOTE: The above instructions utilize the `Make a copy` file option in Google Sheets. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo.
 
 If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match.
 
