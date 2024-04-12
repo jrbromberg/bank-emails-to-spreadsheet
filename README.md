@@ -9,7 +9,7 @@ The script is set up to work with the below accounts.
 
 # Features
 
-- Email received datetime, bank, account, update type, amount, and description pulled into Transactions tab for each update
+- Transaction or balance details pulled into Transactions tab for each update
 - Balances summed by account in balances tab
 - New transactions checked against pending transactions to keep balances accurate
 - Emailed error alerts
