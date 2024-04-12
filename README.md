@@ -32,9 +32,9 @@ Create a filter to label incoming bank alerts using the below settings.  If you 
 In your bank account, setup notifications so that you receive emails for all transactions. Do the same for balance updates if available.  With transaction alerts, you'll want to set the threshold as low as possible.  For BECU, I was able to get all transactions over $1.00.  For Bank of America, I was able to get all transactions over $0.01.
 
 ### 3. Spreadsheet
-[This is the spreadsheet.](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo)
+Make a copy of [bank-emails-to-spreadsheet](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo) in your host Google account by clicking this [link to copy the spreadsheet](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo/copy).  You could also choose `Make a copy` from the file menu in Google Sheets.
 
-You can `Make a copy` from the file menu or you can [click this link](https://docs.google.com/spreadsheets/d/1LBkVF94ZmOu09n-ugCw50vD-p41wiap2ETIQwf2Epfo/copy).
+Making a copy of the spreadsheet will copy both the spreadsheet and the attached script.
 
 ### 4. Testing and deployment
 
