@@ -22,13 +22,13 @@ _NOTE: These instructions utilize the `Make a copy` file option in Google Sheets
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
 
+In the Gmail account that will host the spreadsheet, create a label named `bankupdate`
+
 Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, include your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
 - `Never send it to Spam`
-
-In the Gmail account that will host the spreadsheet, create a label named `bankupdate`
 
 ### 2. Bank alerts
 In your bank account, setup notifications so that you receive emails for all transactions. Do the same for balance updates if available.  With transaction alerts, you'll want to set the threshold as low as possible.  For BECU, I was able to get all transactions over $1.00.  For Bank of America, I was able to get all transactions over $0.01.
