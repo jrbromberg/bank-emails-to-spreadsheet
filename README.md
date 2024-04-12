@@ -20,7 +20,7 @@ The script is set up to work with the below accounts. To modify the script to wo
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
 
-In the Gmail account that will host the spreadsheet, create a label named `bankupdate`
+Create a label named `bankupdate`
 
 Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, include your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
