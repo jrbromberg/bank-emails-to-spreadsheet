@@ -23,9 +23,9 @@ You can use an existing Gmail account or setup a new account.  The script can pr
 Create a label named `bankupdate`
 
 Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, enter your email in the `From` field.
-- `From: [add all sender emails here separated by " OR "]`
-- `Do this: Star it`
-- `Apply the label: bankupdate`
+- `From` = `All sender emails separated by " OR "`
+- `Star it`
+- `Apply the label` = `bankupdate`
 - `Never send it to Spam`
 
 ### 2. Bank alerts
