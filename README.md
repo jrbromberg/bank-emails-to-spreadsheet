@@ -22,7 +22,7 @@ If your bank emails are sent to a Gmail account, you can use that account. You c
 
 Create a label named `bankupdate`
 
-Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, include your email in the sender emails.
+Create a filter to label incoming bank alerts using the below settings.  If you are forwarding your bank alert emails, enter just your email in the sender emails.
 - `From: [add all sender emails here separated by " OR "]`
 - `Do this: Star it`
 - `Apply the label: bankupdate`
