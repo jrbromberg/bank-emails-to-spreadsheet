@@ -17,8 +17,6 @@ The script is set up to work with the below accounts. To modify the script to wo
 
 # Setup
 
-_NOTE: These instructions utilize the `Make a copy` file option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo._
-
 ### 1. Email setup
 If your bank emails are sent to a Gmail account, you can use that account. You can also forward your bank emails to a new Gmail account, and use that account. In the Gmail account that you will use to host the spreadsheet:
 
@@ -54,6 +52,8 @@ Once you have some bank alert emails successfully starred and labeled, click the
 Finally, when you are ready to automate the script, click the `Set timed triggers` button.
 
 ### 5. Troubleshooting and development
+
+_NOTE: These instructions utilize the `Make a copy` file option in Google Sheets to simplify the setup. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo._
 
 If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match.
 
