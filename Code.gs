@@ -348,7 +348,7 @@ MISSING EXTRA CONTENT REGEX MATCH
       CC_EXPENSE_FORMAT: {
         HAS_TYPE: {
           EXPENSE: {
-            REGEX: /Credit card transaction exceeds/,
+            REGEX: /^(?=.*Credit card transaction exceeds)(?!.*declined).*/,
             TEST_MESSAGES: {
               // prettier-ignore
               DIRECT_EMAIL: `[Bank of America.]
@@ -538,7 +538,7 @@ Bank of America, N.A. Member FDIC
         EXTRA_SECTION: null,
       },
     },
-    NON_UPDATES: [/(Did you know)/, /Your statement is available/],
+    NON_UPDATES: [/(Did you know)/, /Your statement is available/, /declined/],
   };
   BANKS.TEST = {
     NAME: {
@@ -1402,13 +1402,13 @@ function createNewTestSheet() {
 
 function createTransHeadlines() {
   let transHeadlineValues = [
-      "Email time and date",
-      "Bank",
-      "Account #",
-      "Update Type",
-      "Amount",
-      "Description",
-      "System Note",
+    "Email time and date",
+    "Bank",
+    "Account #",
+    "Update Type",
+    "Amount",
+    "Description",
+    "System Note",
   ];
   let headlines = [
     {
