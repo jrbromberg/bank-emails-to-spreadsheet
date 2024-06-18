@@ -348,7 +348,7 @@ MISSING EXTRA CONTENT REGEX MATCH
       CC_EXPENSE_FORMAT: {
         HAS_TYPE: {
           EXPENSE: {
-            REGEX: /Credit card transaction exceeds/,
+            REGEX: /^(?=.*Credit card transaction exceeds)(?!.*declined).*/s,
             TEST_MESSAGES: {
               // prettier-ignore
               DIRECT_EMAIL: `[Bank of America.]
@@ -538,7 +538,7 @@ Bank of America, N.A. Member FDIC
         EXTRA_SECTION: null,
       },
     },
-    NON_UPDATES: [/(Did you know)/, /Your statement is available/],
+    NON_UPDATES: [/Your statement is available/i, /declined/],
   };
   BANKS.TEST = {
     NAME: {
@@ -908,12 +908,16 @@ function getUpdatesFromAllMessages(preppedMessages) {
     let receivedTime = thisMessage.time;
     Logger.log("Message:");
     Logger.log(messageContent);
-    let messageUpdateValues = getUpdatesFromThisMessage(
-      messageContent,
-      receivedTime,
-      bank
-    );
-    allUpdateValues.push(...messageUpdateValues);
+    if (notANonUpdate(messageContent, bank)) {
+      let messageUpdateValues = getUpdatesFromThisMessage(
+        messageContent,
+        receivedTime,
+        bank
+      );
+      allUpdateValues.push(...messageUpdateValues);
+    } else {
+      Logger.log("This is a non-update message");
+    }
   });
   Logger.log(allUpdateValues.length + " updates found");
   Logger.log("Updates:");
@@ -934,13 +938,20 @@ function getBankData(messageContent, sender) {
     : addError(new Error("Email alert origin not recognized"));
 }
 
+function notANonUpdate(messageContent, bank) {
+  return bank.NON_UPDATES
+    ? bank.NON_UPDATES.every((nonUpdate) => !nonUpdate.test(messageContent))
+    : true;
+}
+
 function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
   let allValuesFromAllUpdatesInThisMessage = [];
   try {
     messageFormat = getMessageFormat(messageContent, bank);
-    let messageSections = messageFormat.DELIMITER
-      ? messageContent.split(messageFormat.DELIMITER)
-      : [messageContent];
+    let messageSections =
+      messageFormat && messageFormat.DELIMITER
+        ? messageContent.split(messageFormat.DELIMITER)
+        : [messageContent];
     messageSections.forEach((thisSection) => {
       let updateValuesFromSection = getUpdateValuesFromSection(
         thisSection,
@@ -1402,13 +1413,13 @@ function createNewTestSheet() {
 
 function createTransHeadlines() {
   let transHeadlineValues = [
-      "Email time and date",
-      "Bank",
-      "Account #",
-      "Update Type",
-      "Amount",
-      "Description",
-      "System Note",
+    "Email time and date",
+    "Bank",
+    "Account #",
+    "Update Type",
+    "Amount",
+    "Description",
+    "System Note",
   ];
   let headlines = [
     {
