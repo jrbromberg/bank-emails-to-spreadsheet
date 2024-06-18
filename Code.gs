@@ -538,7 +538,7 @@ Bank of America, N.A. Member FDIC
         EXTRA_SECTION: null,
       },
     },
-    NON_UPDATES: [/(Did you know)/, /Your statement is available/, /declined/],
+    NON_UPDATES: [/Your statement is available/i, /declined/],
   };
   BANKS.TEST = {
     NAME: {
@@ -908,12 +908,16 @@ function getUpdatesFromAllMessages(preppedMessages) {
     let receivedTime = thisMessage.time;
     Logger.log("Message:");
     Logger.log(messageContent);
-    let messageUpdateValues = getUpdatesFromThisMessage(
-      messageContent,
-      receivedTime,
-      bank
-    );
-    allUpdateValues.push(...messageUpdateValues);
+    if (notANonUpdate(messageContent, bank)) {
+      let messageUpdateValues = getUpdatesFromThisMessage(
+        messageContent,
+        receivedTime,
+        bank
+      );
+      allUpdateValues.push(...messageUpdateValues);
+    } else {
+      Logger.log("This is a non-update message");
+    }
   });
   Logger.log(allUpdateValues.length + " updates found");
   Logger.log("Updates:");
@@ -932,6 +936,12 @@ function getBankData(messageContent, sender) {
   return bankValues
     ? bankValues
     : addError(new Error("Email alert origin not recognized"));
+}
+
+function notANonUpdate(messageContent, bank) {
+  return bank.NON_UPDATES
+    ? bank.NON_UPDATES.every((nonUpdate) => !nonUpdate.test(messageContent))
+    : true;
 }
 
 function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
