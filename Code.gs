@@ -348,7 +348,7 @@ MISSING EXTRA CONTENT REGEX MATCH
       CC_EXPENSE_FORMAT: {
         HAS_TYPE: {
           EXPENSE: {
-            REGEX: /^(?=.*Credit card transaction exceeds)(?!.*declined).*/,
+            REGEX: /^(?=.*Credit card transaction exceeds)(?!.*declined).*/s,
             TEST_MESSAGES: {
               // prettier-ignore
               DIRECT_EMAIL: `[Bank of America.]
@@ -938,9 +938,10 @@ function getUpdatesFromThisMessage(messageContent, receivedTime, bank) {
   let allValuesFromAllUpdatesInThisMessage = [];
   try {
     messageFormat = getMessageFormat(messageContent, bank);
-    let messageSections = messageFormat.DELIMITER
-      ? messageContent.split(messageFormat.DELIMITER)
-      : [messageContent];
+    let messageSections =
+      messageFormat && messageFormat.DELIMITER
+        ? messageContent.split(messageFormat.DELIMITER)
+        : [messageContent];
     messageSections.forEach((thisSection) => {
       let updateValuesFromSection = getUpdateValuesFromSection(
         thisSection,
