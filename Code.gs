@@ -24,7 +24,7 @@ function setBanks() {
     },
     SENDERS: {
       DIRECT: ["noreply@becualerts.org"],
-      FORWARDED: ["From: BECU Notifications <noreply@becualerts.org>"],
+      FORWARDED: ["From: BECU Notifications <noreply@becualerts.org>", "From: BECU <noreply@becualerts.org>"],
     },
     UPDATES: {
       TRANSACTION_FORMAT: {
@@ -824,6 +824,12 @@ function lockDocumentDuring(functionToExecute) {
   } catch (error) {
     addError(error, "Error occured with document lock");
   }
+}
+
+function onOpen() {
+  BASIC_CONFIG.SPREADSHEET.setActiveSheet(
+    BASIC_CONFIG.SPREADSHEET.getSheetByName("Dash")
+  );
 }
 
 // *****************************************************************************************************************************
