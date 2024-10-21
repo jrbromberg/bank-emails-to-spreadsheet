@@ -9,11 +9,9 @@ The script is set up to work with the below accounts.
 
 # Features
 
-- Details pulled into Transactions tab for each update
+- Financial updates pulled into Transactions
 - Balances summed by account in Balances tab
-- New transactions checked against pending transactions to keep balances accurate
-- Emailed error alerts
-- Testing suite
+- New transactions checked against pending transactions
 
 # Setup
 
@@ -53,12 +51,8 @@ Finally, when you are ready to automate the script, click the `Set timed trigger
 
 ### 5. Troubleshooting and development
 
-NOTE: The above instructions utilize the `Make a copy` file option in Google Sheets. You could also recreate the spreadsheet manually and attach the Code.gs script from this repo.
+NOTE: The above instructions utilize the `Make a copy` file option in Google Sheets. You could also recreate the spreadsheet manually by uploading the files in the script folder from this repo.
 
 If you setup a separate Google account to host your spreadsheet and you want to access the script for troubleshooting or development, you'll need to go directly to https://script.google.com/.  From there, change your Google account to the one hosting the sheet.  Google does not allow script access via the Sheets file menu when the sheet account and default Chrome account don't match.
 
 To rerun an email, assuming it's already labeled with `bankupdate`, star the email manually in Gmail.  Be aware, there is a small bug with Google Apps Script and Gmail stars.  When an email is starred manually via the Gmail UI and then unstarred via the script, the star will remain in Gmail.  The script will still consider the email unstarred even though the star still appears in Gmail.  This should not impact script usability and is only a small nuisance while testing. Just remember to star and unstar manually for testing. Emails that are both starred and unstarred by the script will not appear as starred in Gmail.
-
-If you are interested in expanding the script to work with additional accounts, you can use the `getPlainBodyMessagesForBankSetup` function to help with setting up regex.  If you label an email `banksetup`, this function will log a simplified string of the email that is used by the script for scraping.  Bank and regex information is stored in the `BANKS` object.
-
-Enjoy and let me know if I missed anything.
