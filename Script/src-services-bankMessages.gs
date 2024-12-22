@@ -46,23 +46,31 @@ function processMessages(preppedMessages) {
 
 function getFinancialUpdatesFromPreppedMessages(preppedMessages) {
   let allFinancialUpdates = [];
-  preppedMessages.forEach((preppedMessage) => {
-    let messageContent = preppedMessage.content;
-    let bank = getBankData(messageContent, preppedMessage.from);
-    let receivedTime = preppedMessage.time;
-    Logger.log("Message:");
-    Logger.log(messageContent);
-    if (notMessageToIgnore(messageContent, bank)) {
-      let financialUpdatesFromMessage = getFinancialUpdatesFromMessage(
-        messageContent,
-        receivedTime,
-        bank
+  for (let preppedMessage of preppedMessages) {
+    try {
+      let messageContent = preppedMessage.content;
+      let bank = getBankData(messageContent, preppedMessage.from);
+      let receivedTime = preppedMessage.time;
+      Logger.log("Message:");
+      Logger.log(messageContent);
+      if (notMessageToIgnore(messageContent, bank)) {
+        let financialUpdatesFromMessage = getFinancialUpdatesFromMessage(
+          messageContent,
+          receivedTime,
+          bank
+        );
+        allFinancialUpdates.push(...financialUpdatesFromMessage);
+      } else {
+        Logger.log("This is a message to ignore");
+      }
+    } catch (error) {
+      addError(
+        error,
+        "Error occured while getting financial updates from a prepped message"
       );
-      allFinancialUpdates.push(...financialUpdatesFromMessage);
-    } else {
-      Logger.log("This is a message to ignore");
+      continue;
     }
-  });
+  }
   Logger.log(allFinancialUpdates.length + " financial updates found");
   Logger.log("Financial updates:");
   Logger.log(allFinancialUpdates);
@@ -79,7 +87,16 @@ function getBankData(messageContent, sender) {
     );
   return bankData
     ? bankData
-    : addError(new Error("Email alert origin not recognized"));
+    : addError(
+        new Error(
+          [
+            "Email origin not recognized in message content",
+            "---start message content---",
+            messageContent,
+            "---end message content---",
+          ].join("\n")
+        )
+      );
 }
 
 function notMessageToIgnore(messageContent, bank) {
@@ -114,7 +131,12 @@ function getFinancialUpdatesFromMessage(messageContent, receivedTime, bank) {
   } catch (error) {
     addError(
       error,
-      "Error occured while getting financial updates from message"
+      [
+        "Error occured while getting financial updates from a prepped message",
+        "---start message content---",
+        messageContent,
+        "---end message content---",
+      ].join("\n")
     );
   }
   return financialUpdatesFromMessage;
@@ -147,6 +169,7 @@ function getFinancialUpdatesFromMessageSection(
     let description = smartMatch(messageSection, messageFormat.DESCRIPTION);
     let dollarAmount = smartMatch(messageSection, messageFormat.AMOUNT);
     if (
+      dollarAmount != null &&
       [
         FINANCIAL_UPDATE_TYPES.EXPENSE,
         FINANCIAL_UPDATE_TYPES.PENDING_EXPENSE,
@@ -154,14 +177,25 @@ function getFinancialUpdatesFromMessageSection(
     ) {
       dollarAmount = `-${dollarAmount}`;
     }
-    return [
-      receivedTime,
-      bank.NAME.SHORT,
-      accountNum,
-      financialUpdateType,
-      dollarAmount,
-      description,
-    ];
+    if (
+      [
+        receivedTime,
+        bank?.NAME?.SHORT,
+        accountNum,
+        financialUpdateType,
+        dollarAmount,
+        description,
+      ].every((value) => value != null)
+    ) {
+      return [
+        receivedTime,
+        bank.NAME.SHORT,
+        accountNum,
+        financialUpdateType,
+        dollarAmount,
+        description,
+      ];
+    }
   }
   return null;
 }

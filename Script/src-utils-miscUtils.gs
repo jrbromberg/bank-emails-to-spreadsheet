@@ -12,13 +12,38 @@ function getPlainBodyMessagesForBankSetup() {
 function smartMatch(stringToSearch, regex) {
   let simpleMatch = stringToSearch.match(regex);
   if (!simpleMatch) {
-    addError(new Error("Failed to match regex " + regex));
+    addError(
+      new Error(
+        [
+          "Failed to match regex:",
+          regex,
+          "With string:",
+          "---start string---",
+          stringToSearch,
+          "---end string---",
+        ].join("\n")
+      )
+    );
+    return null;
   }
   let matchToReturn = simpleMatch
     ? simpleMatch[simpleMatch.length > 1 ? 1 : 0]
     : undefined;
   matchToReturn =
     typeof matchToReturn === "string" ? matchToReturn.trim() : matchToReturn;
-  if (matchToReturn) return matchToReturn;
-  addError(new Error("smartMatch failed \nsimpleMatch: " + simpleMatch));
+  return matchToReturn
+    ? matchToReturn
+    : addError(
+        new Error(
+          [
+            "smartMatch failed",
+            "working from simpleMatch: " + simpleMatch,
+          ].join("\n")
+        )
+      );
+}
+
+// sort entries from bottom up so that deleting entry doesn't affect row number of next in line deletions
+function sortEntriesForDelete(entries) {
+  return entries.sort((a, b) => b.row - a.row);
 }

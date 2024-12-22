@@ -16,15 +16,6 @@ function lockDocumentDuring(functionToExecute) {
   }
 }
 
-// function getPropertyUsingString(object, stringPath) {
-//   return stringPath
-//     .split(".")
-//     .reduce(
-//       (accumulator, property) => accumulator && accumulator[property],
-//       object
-//     );
-// }
-
 function trimOrNull(value) {
   return typeof value === "string" ? value.trim() : null;
 }

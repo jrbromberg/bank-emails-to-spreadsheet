@@ -1,7 +1,7 @@
 // functions called directly by buttons in google sheet
 
 function buttonRunTheApp() {
-  STATIC_CONFIG.TRANS_SHEET.activate();
+  STATIC_CONFIG.UPDATE_SHEET.activate();
   checkForNewAlerts("production");
 }
 
@@ -58,6 +58,17 @@ function buttonDeleteTimedTriggers() {
       );
     } catch (error) {
       addError(error, "Failed to delete timed triggers");
+    }
+  });
+}
+
+function buttonManualEntry() {
+  lockDocumentDuring(() => {
+    try {
+      STATIC_CONFIG.UPDATE_SHEET.activate();
+      enterManualEntries();
+    } catch (error) {
+      addError(error, "Manual entries failed");
     }
   });
 }

@@ -4,7 +4,7 @@ function initStaticConfig() {
   const defaultErrorAlertEmail = Session.getEffectiveUser().getEmail();
   let spreadsheet,
     settingsSheet,
-    transSheet,
+    updateSheet,
     errorAlertEmailOverride,
     alertMessageGmailLabelOverride,
     localDateTime;
@@ -23,7 +23,8 @@ function initStaticConfig() {
   } catch (error) {
     addError(error, "Failed to get Static Config values");
   }
-  transSheet = spreadsheet?.getSheetByName("Transactions");
+  updateSheet = spreadsheet?.getSheetByName("Updates");
+  manualEntrySheet = spreadsheet?.getSheetByName("Manual Entry");
   localDateTime = Utilities.formatDate(
     new Date(),
     Session.getScriptTimeZone(),
@@ -32,7 +33,8 @@ function initStaticConfig() {
   STATIC_CONFIG = {
     SPREADSHEET: spreadsheet,
     SETTINGS_SHEET: settingsSheet,
-    TRANS_SHEET: transSheet,
+    UPDATE_SHEET: updateSheet,
+    MANUAL_UPDATE_SHEET: manualEntrySheet,
     ERROR_ALERT_EMAIL_ADDRESS:
       errorAlertEmailOverride ||
       spreadsheet?.getOwner().getEmail() ||
@@ -63,7 +65,7 @@ function initRuntimeConfig(environment) {
 function setProductionGlobalValues() {
   GLOBAL_CONST.MESSAGE_SOURCE = "email";
   GLOBAL_CONST.ERROR_ALERT_EMAIL_SUBJECT = "Financial Dashboard Error";
-  GLOBAL_CONST.WRITE_SHEET = STATIC_CONFIG.TRANS_SHEET;
+  GLOBAL_CONST.WRITE_SHEET = STATIC_CONFIG.UPDATE_SHEET;
   fetchStarredMessages();
 }
 

@@ -42,7 +42,7 @@ function setBanks() {
           },
         },
         ACCOUNT_NUM: /\d{4}(?=\s\*)/,
-        AMOUNT: /\$(?!0\.00|1\.00)[\d,]*\.\d\d/,
+        AMOUNT: /(?<!larger than )\$(?!0\.00)[\d,]*\.\d\d/,
         DESCRIPTION: /(?<=larger than)[\s\S]*(?<=\()(.*)(?=\))/,
         DELIMITER: /(?=Log In To Account)/g,
         EXTRA_SECTION: {
@@ -120,6 +120,95 @@ function setBanks() {
     },
     MESSAGES_TO_IGNORE: [/Your statement is available/i, /declined/],
   };
+  BANKS.FIDELITY = {
+    NAME: {
+      LONG: "Fidelity",
+      SHORT: "Fidelity",
+    },
+    SENDERS: {
+      DIRECT: [
+        "Fidelity.Alerts@Fidelity.com",
+        "fidelityealerts@alert.fidelityrewards.com",
+      ],
+      FORWARDED: [
+        "From: Fidelity Investments<Fidelity.Alerts@Fidelity.com>",
+        "From: Fidelity Investments <Fidelity.Alerts@Fidelity.com>",
+        "From: Cardmember Service Account Alerts <fidelityealerts@alert.fidelityrewards.com>",
+        "From: Fidelity Investments Credit Card Account Alerts <fidelityealerts@alert.fidelityrewards.com>",
+      ],
+    },
+    FINANCIAL_UPDATE_MESSAGE_FORMATS: {
+      BALANCE_MESSAGE_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          BALANCE: {
+            REGEX: /balance/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=XXX)\d{4}(?=[\r\n])/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /Account:.*(?=[\r\n])/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+      CC_DEBIT_MESSAGE_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          EXPENSE: {
+            REGEX: /Credit card debit posted/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=ending in )\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /Account Number.*(?=[\r\n])/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+      CC_CHARGE_MESSAGE_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          PENDING_EXPENSE: {
+            REGEX: /Your (card|account) was charged/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=ending in )\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /(?<=\.\d\d at ).*?(?=\.)/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+      DIRECT_DEBIT_WITHDRAWAL_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          EXPENSE: {
+            REGEX: /Direct Debit Withdrawal/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=ending in )\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /(?<=by )(.*?)(?=\.\n)/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+      CREDIT_CARD_PAYMENT_POSTED_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          DEPOSIT: {
+            REGEX: /Credit Card Payment Posted/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=ending in )\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /Credit Card Payment Posted/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
+    },
+    MESSAGES_TO_IGNORE: [
+      /Online Account Transfer Initiated/,
+      /Deposit Received/,
+    ],
+  };
   BANKS.TEST = {
     NAME: {
       LONG: "Test Bank",
@@ -183,6 +272,14 @@ function setTestEmails() {
     trimOrNull(bofa_balanceMessageFormat_balance_directTestEmail);
   BANKS.BOFA.FINANCIAL_UPDATE_MESSAGE_FORMATS.BALANCE_MESSAGE_FORMAT.FINANCIAL_UPDATE_TYPES.BALANCE.TEST_MESSAGES.FORWARDED_MESSAGE =
     trimOrNull(bofa_balanceMessageFormat_balance_forwardedTestEmail);
+  BANKS.FIDELITY.FINANCIAL_UPDATE_MESSAGE_FORMATS.BALANCE_MESSAGE_FORMAT.FINANCIAL_UPDATE_TYPES.BALANCE.TEST_MESSAGES.DIRECT_MESSAGE =
+    trimOrNull(fidelity_balanceMessageFormat_balance_directTestEmail);
+  BANKS.FIDELITY.FINANCIAL_UPDATE_MESSAGE_FORMATS.BALANCE_MESSAGE_FORMAT.FINANCIAL_UPDATE_TYPES.BALANCE.TEST_MESSAGES.FORWARDED_MESSAGE =
+    trimOrNull(fidelity_balanceMessageFormat_balance_forwardedTestEmail);
+  BANKS.FIDELITY.FINANCIAL_UPDATE_MESSAGE_FORMATS.CC_DEBIT_MESSAGE_FORMAT.FINANCIAL_UPDATE_TYPES.EXPENSE.TEST_MESSAGES.DIRECT_MESSAGE =
+    trimOrNull(fidelity_ccDebitMessageFormat_expense_directTestEmail);
+  BANKS.FIDELITY.FINANCIAL_UPDATE_MESSAGE_FORMATS.CC_DEBIT_MESSAGE_FORMAT.FINANCIAL_UPDATE_TYPES.EXPENSE.TEST_MESSAGES.FORWARDED_MESSAGE =
+    trimOrNull(fidelity_ccDebitMessageFormat_expense_forwardedTestEmail);
 }
 
 function initFinancialUpdateTypes() {
@@ -612,4 +709,67 @@ Please don't reply to this automatically generated service email.
 Privacy Notice<https://www.bankofamerica.com/...>        Equal Housing Lender [https://www.bankofamerica.com/...] <https://www.bankofamerica.com/...>
 Bank of America, N.A. Member FDIC
 © 2024 Bank of America Corporation
+`;
+
+const fidelity_balanceMessageFormat_balance_directTestEmail = null;
+const fidelity_balanceMessageFormat_balance_forwardedTestEmail = `
+From: Fidelity Investments<Fidelity.Alerts@Fidelity.com>
+Subject: Fidelity Alerts: Daily Balance
+Date: October 18, 2024 at 10:09:43 PM PDT
+To: <youremail@domain.com>
+Reply-To: Fidelity_Investments_Service_DoNotReply@fidelity.com
+
+Fidelity Alert: Daily Balance
+[Fidelity Investments]<https://www.fidelity.com/>
+________________________________
+Subscription Alert
+Sat Oct 19, 2024
+01:08:39 a.m. ET
+End of day balance
+Account: XXXXX3333
+
+Your Daily Balance is $<amount> for 10/19/2024.
+View balance<https://digital.fidelity.com/...>
+
+Or log in to Fidelity.com<http://fidelity.com/> and select Accounts & Trade > Portfolio > Balances
+
+Unsubscribe<https://alertable.fidelity.com/...>   |   Send a Secure Message<https://servicemessages.fidelity.com/...>   |   Fidelity Alerts User Agreement<https://www.fidelity.com/...>
+Please do not reply to this email. To verify this email was sent by Fidelity Investments, log in to your account and visit News & Research > Alerts > View Alerts History.
+
+Important information:
+Fidelity automatically emails certain alerts to customers who have provided an email address.
+
+Fidelity Brokerage Services LLC, Member NYSE, SIPC<https://www.sipc.org/>, 900 Salem Street, Smithfield, RI 02917.
+
+537048
+© 2024 FMR LLC. All rights reserved.
+`;
+
+const fidelity_ccDebitMessageFormat_expense_directTestEmail = null;
+const fidelity_ccDebitMessageFormat_expense_forwardedTestEmail = `
+________________________________
+From: Cardmember Service Account Alerts <fidelityealerts@alert.fidelityrewards.com>
+Sent: Thursday, October 24, 2024 12:32:00 AM (UTC-08:00) Pacific Time (US & Canada)
+To: <youremail@domain.com>
+Subject: Fidelity® Credit Card Debit Posted
+
+[Fidelity]
+Credit card debit posted
+
+Account Number ending in 3333
+
+A debit of $<amount> has been posted to your account on 10/23/2024. To view your account, login to your credit card account at Fidelity.com or FidelityRewards.com.
+
+You are receiving this email because you signed up for alerts through your Fidelity® credit card. If you no longer wish to receive this alert, login to inactivate the alert. Please do not reply to this message.
+
+Thank you for being a valued Cardmember.
+
+
+Protecting your privacy is our priority. We will never request personal information (such as your Personal ID, Password, Social Security Number, PIN or Account Number) via email. For your safety, we recommend that you do not share this information with anyone at any time. Sharing such information can give the recipient full access to your account. If you receive emails requesting personal information, call Cardmember Service immediately at the number on the back of your card.
+
+View your Elan Financial Services Privacy Policy https://login.fidelityrewards.com/...
+
+FIDELITY - PO BOX 6354, FARGO, ND 58125-6354
+
+The creditor and issuer of your Card is Elan Financial Services, pursuant to a license from Visa U.S.A. Inc.
 `;

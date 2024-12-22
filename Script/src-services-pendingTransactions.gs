@@ -2,12 +2,24 @@
 // looks for exact match at first then looks for close match for older pending transactions
 
 function runPostUpdatePendingReview() {
-  const transactionsForCheck = getTransactionsForPendingCheck();
-  if (transactionsForCheck) {
-    const resolvedTransactions = getResolvedTransactions(transactionsForCheck);
-    updateResolvedTransactions(resolvedTransactions);
-  } else {
-    Logger.log("No current pending transactions");
+  try {
+    const transactionsForCheck = getTransactionsForPendingCheck();
+    if (transactionsForCheck) {
+      Logger.log(transactionsForCheck.pending.length + " pending transactions");
+      const resolvedTransactions =
+        getResolvedTransactions(transactionsForCheck);
+      Logger.log(
+        resolvedTransactions.pending.length + " resolved transactions"
+      );
+      updateResolvedTransactions(resolvedTransactions);
+    } else {
+      Logger.log("No current pending transactions");
+    }
+  } catch (error) {
+    addError(
+      error,
+      "Error occurred while checking pending actions after update"
+    );
   }
 }
 
@@ -24,7 +36,7 @@ function getTransactionsForPendingCheck() {
         ].includes(rowValues[3])
       ) {
         transactionsForCheck.pending.push(
-          getTransactionValues(rowNumber, rowValues)
+          getUpdateEntryValues(rowNumber, rowValues)
         );
       } else if (
         !rowValues[6] &&
@@ -33,7 +45,7 @@ function getTransactionsForPendingCheck() {
         // depends on no note being present for completed transactions
         // that have not already been used for a pending transaction
         transactionsForCheck.completed.push(
-          getTransactionValues(rowNumber, rowValues)
+          getUpdateEntryValues(rowNumber, rowValues)
         );
       }
     });
@@ -55,7 +67,7 @@ function getRowsOldestPendingAndUp() {
     : null;
 }
 
-function getTransactionValues(rowNumber, rowValues) {
+function getUpdateEntryValues(rowNumber, rowValues) {
   let dateTime = new Date(rowValues[0]);
   let bank = rowValues[1].toString();
   let accountNum = rowValues[2].toString();
@@ -96,7 +108,7 @@ function getResolvedTransactions(transactionsForCheck) {
           pendingTransactionCompValues,
           completedTransactionCompValues
         ) &&
-        isOlderThanThreeDays(pendingTransaction) &&
+        isOlder(pendingTransaction) &&
         isApproxMatch(pendingTransaction, completedTransaction)
       ) {
         addToResolved("Approximate Match");
@@ -116,8 +128,8 @@ function getResolvedTransactions(transactionsForCheck) {
         Logger.log(
           "Completed transaction is " + matchType + " for pending transaction"
         );
-        Logger.log(completedTransaction);
-        Logger.log(pendingTransaction);
+        Logger.log(completedTransaction.values.slice(0, -1));
+        Logger.log(pendingTransaction.values);
       }
     }
     matchedCompletedIndeces.forEach((index) => {
@@ -130,7 +142,7 @@ function getResolvedTransactions(transactionsForCheck) {
 function getCompValues(transactionForComp) {
   let valuesForComp = [...transactionForComp.values];
   valuesForComp[3] = valuesForComp[3].replace("Pending ", "");
-  return valuesForComp.slice(1, 6);
+  return valuesForComp.slice(1, 5);
 }
 
 function isEqualSansAmount(pendingValues, completedValues) {
@@ -141,10 +153,11 @@ function isEqualSansAmount(pendingValues, completedValues) {
   return JSON.stringify(pendingValues) === JSON.stringify(completedValues);
 }
 
-function isOlderThanThreeDays(pendingTransaction) {
+function isOlder(pendingTransaction) {
+  const days = 5;
   const now = new Date();
-  const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
-  return pendingTransaction.values[0] < threeDaysAgo;
+  const daysAgo = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+  return pendingTransaction.values[0] < daysAgo;
 }
 
 function isApproxMatch(pendingTransaction, completedTransaction) {
@@ -204,15 +217,15 @@ function getCompletedMatchWithNote(
 }
 
 function updateResolvedTransactions(resolvedTransactions) {
-  // make updates before deletions
-  // make deletions from bottom up
   for (const completedTransaction of resolvedTransactions.completed) {
     noteCellRange = "G" + completedTransaction.row;
     GLOBAL_CONST.WRITE_SHEET.getRange(noteCellRange).setValue(
       completedTransaction.values[6]
     );
   }
-  resolvedTransactions.pending.sort((a, b) => b.row - a.row);
+  resolvedTransactions.pending = sortEntriesForDelete(
+    resolvedTransactions.pending
+  );
   for (const pendingTransaction of resolvedTransactions.pending) {
     GLOBAL_CONST.WRITE_SHEET.deleteRow(pendingTransaction.row);
   }

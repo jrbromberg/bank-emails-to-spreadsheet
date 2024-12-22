@@ -24,6 +24,7 @@ function addError(error, separateEmailMessage) {
     console.error(error.stack);
     sendErrorAlertEmail();
   }
+  return null;
 }
 
 function sendErrorAlertEmail() {
