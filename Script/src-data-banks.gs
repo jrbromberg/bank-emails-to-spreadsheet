@@ -53,6 +53,7 @@ function setBanks() {
     },
     MESSAGES_TO_IGNORE: [/(Low Account Balance)/],
   };
+
   BANKS.BOFA = {
     NAME: {
       LONG: "Bank of America",
@@ -120,6 +121,7 @@ function setBanks() {
     },
     MESSAGES_TO_IGNORE: [/Your statement is available/i, /declined/],
   };
+
   BANKS.FIDELITY = {
     NAME: {
       LONG: "Fidelity",
@@ -203,12 +205,26 @@ function setBanks() {
         DELIMITER: null,
         EXTRA_SECTION: null,
       },
+      CC_CREDIT_MESSAGE_FORMAT: {
+        FINANCIAL_UPDATE_TYPES: {
+          DEPOSIT: {
+            REGEX: /Credit card credit posted/,
+            TEST_MESSAGES: {},
+          },
+        },
+        ACCOUNT_NUM: /(?<=ending in )\d{4}/,
+        AMOUNT: /(?!\$0\.00)\$\s*([\d,]*\.\d\d)/,
+        DESCRIPTION: /Credit card credit posted/,
+        DELIMITER: null,
+        EXTRA_SECTION: null,
+      },
     },
     MESSAGES_TO_IGNORE: [
       /Online Account Transfer Initiated/,
       /Deposit Received/,
     ],
   };
+
   BANKS.TEST = {
     NAME: {
       LONG: "Test Bank",
