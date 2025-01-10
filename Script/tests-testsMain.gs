@@ -232,7 +232,7 @@ function setInitialTestData() {
       ],
     ];
     TEST_DATA.STARTER_VALUES.forEach((rowValues) => {
-      writeToTransactionsSheet(rowValues);
+      writeToUpdatesSheet(rowValues);
     });
   }
   

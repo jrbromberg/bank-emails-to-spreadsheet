@@ -34,7 +34,7 @@ function processMessages(preppedMessages) {
     // so that rows pending deletion aren't re-ordered (got bottom to top)
     // seems this happen by accident but want to ensure it
     financialUpdates.forEach((financialUpdate) => {
-      writeToTransactionsSheet(financialUpdate);
+      writeToUpdatesSheet(financialUpdate);
     });
     Logger.log("Financial updates added to sheet");
     runPostUpdatePendingReview();
@@ -216,11 +216,4 @@ function getFinancialUpdateType(messageSection, messageFormat) {
     return matchingName ? matchingName[1] : null;
   }
   return null;
-}
-
-function writeToTransactionsSheet(financialUpdates) {
-  GLOBAL_CONST.WRITE_SHEET.insertRowBefore(2);
-  GLOBAL_CONST.WRITE_SHEET.getRange(2, 1, 1, financialUpdates.length).setValues(
-    [financialUpdates]
-  );
 }

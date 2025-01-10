@@ -3,12 +3,12 @@
 function enterManualEntries() {
   initRuntimeConfig("production");
   let manualEntries =
-    STATIC_CONFIG.MANUAL_UPDATE_SHEET.getRange("A2:E10").getValues();
+    STATIC_CONFIG.MANUAL_UPDATE_SHEET.getRange("A2:E31").getValues();
   const filteredManualEntries = filterForNonEmptyManualEntries(manualEntries);
   const sortedManualEntries = getSortedManualEntries(filteredManualEntries);
   sortedManualEntries.forEach((manualEntry) => {
     const financialUpdate = getManualEntryValues(manualEntry);
-    writeToTransactionsSheet(financialUpdate);
+    writeToUpdatesSheet(financialUpdate);
   });
   const previousEntriesToDelete = sortEntriesForDelete(
     getPreviousEntriesToDelete(filteredManualEntries)
@@ -73,7 +73,7 @@ function getPreviousEntriesToDelete(manualEntries) {
   ];
   previousEntriesFromUpdatesSheet.forEach((rowValues, index) => {
     const rowNumber = index + 2 + manualEntriesCount;
-    const valuesFromUpdateEntry = getTransactionValues(rowNumber, rowValues);
+    const valuesFromUpdateEntry = getUpdateEntryValues(rowNumber, rowValues);
     if (
       uniqueAccountsFromBalanceUpdates.includes(
         String(valuesFromUpdateEntry.values[2])
@@ -86,7 +86,7 @@ function getPreviousEntriesToDelete(manualEntries) {
 }
 
 function clearManualEntryCells() {
-  const entryRanges = ["A2:A10", "D2:D10", "E2:E10"];
+  const entryRanges = ["A2:A31", "D2:D31", "E2:E31"];
   entryRanges.forEach(function (range) {
     STATIC_CONFIG.MANUAL_UPDATE_SHEET.getRange(range).clearContent();
   });

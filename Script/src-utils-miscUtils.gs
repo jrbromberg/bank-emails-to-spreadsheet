@@ -47,3 +47,11 @@ function smartMatch(stringToSearch, regex) {
 function sortEntriesForDelete(entries) {
   return entries.sort((a, b) => b.row - a.row);
 }
+
+// insert new row under header row and write values
+function writeToUpdatesSheet(financialUpdates) {
+  GLOBAL_CONST.WRITE_SHEET.insertRowBefore(2);
+  GLOBAL_CONST.WRITE_SHEET.getRange(2, 1, 1, financialUpdates.length).setValues(
+    [financialUpdates]
+  );
+}
